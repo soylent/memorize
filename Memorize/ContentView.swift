@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    var emojis = ["🦑", "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️"]
-    @State var emojiCount = 12
+    static let animals = ["🦑", "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗"]
+    static let food = ["🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒"]
+    static let transport = ["🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🛻", "🚚", "🚛", "🚜", "🏍", "🚝", "🚲", "🛵", "🛴"]
+    @State var emojis = animals
+    @State var emojiCount = 15
     
     var body: some View {
         VStack {
@@ -20,10 +23,35 @@ struct ContentView: View {
                         CardView(content: emoji).aspectRatio(2/3, contentMode: .fit)
                     }
                 }}
-            .foregroundColor(.red)
+            .foregroundColor(.accentColor)
             Spacer()
-            HStack {
+            HStack(alignment: .bottom) {
                 removeCard
+                Spacer()
+                Button {
+                    emojis = ContentView.animals.shuffled()
+                } label: {
+                    VStack {
+                        Image(systemName: "pawprint")
+                        Text("Animals").font(.body)
+                    }
+                }
+                Button {
+                    emojis = ContentView.food.shuffled()
+                } label: {
+                    VStack {
+                        Image(systemName: "takeoutbag.and.cup.and.straw")
+                        Text("Food").font(.body)
+                    }
+                }
+                Button {
+                    emojis = ContentView.transport.shuffled()
+                } label: {
+                    VStack {
+                        Image(systemName: "car")
+                        Text("Vehicles").font(.body)
+                    }
+                }
                 Spacer()
                 addCard
             }
