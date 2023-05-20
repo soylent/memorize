@@ -19,18 +19,18 @@ struct ContentView: View {
     ]
     
     @State private var emojis = animalEmojis
-    @State private var emojiCount = 15
+    @State private var emojiCount = 10
     
     var body: some View {
         VStack {
             Text("Memorize!").font(.largeTitle)
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: widthThatBestFits(cardCount: emojiCount)))]) {
                     ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
                         CardView(content: emoji).aspectRatio(2/3, contentMode: .fit)
                     }
                 }}
-            .foregroundColor(.accentColor)
+            .foregroundColor(.secondary)
             Spacer()
             HStack(alignment: .bottom) {
                 removeCard
@@ -83,6 +83,10 @@ struct ContentView: View {
     private func switchTheme(to newEmojis: [String]) {
         emojiCount = Int.random(in: 4...15)
         emojis = newEmojis.shuffled()
+    }
+    
+    private func widthThatBestFits(cardCount: Int) -> CGFloat {
+        330.0 / (CGFloat(cardCount).squareRoot().rounded(.down) + 1)
     }
     
     private var removeCard: some View {
