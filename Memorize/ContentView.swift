@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ContentView: View {
     private static let animalEmojis = [
-        "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗"
+        "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗", "🐨"
     ]
     private static let foodEmojis = [
-        "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒"
+        "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"
     ]
     private static let transportEmojis = [
-        "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🛻", "🚚", "🚛", "🚜", "🏍", "🚝", "🚲", "🛵", "🛴"
+        "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🛻", "🚚", "🚛", "🚜", "🏍", "🚝", "🚲", "🛵", "🛴", "🚁"
     ]
     
     @State private var emojis = animalEmojis
@@ -86,7 +86,7 @@ struct ContentView: View {
     }
     
     private func widthThatBestFits(cardCount: Int) -> CGFloat {
-        330.0 / (CGFloat(cardCount).squareRoot().rounded(.down) + 1)
+        330.0 / CGFloat(cardCount).squareRoot().rounded(.up)
     }
     
     private var removeCard: some View {
