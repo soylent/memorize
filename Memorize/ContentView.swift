@@ -33,13 +33,9 @@ struct ContentView: View {
             .foregroundColor(.secondary)
             Spacer()
             HStack(alignment: .bottom) {
-                removeCard
-                Spacer()
                 animalTheme
                 foodTheme
                 vehicleTheme
-                Spacer()
-                addCard
             }
             .padding(.horizontal)
             .font(.largeTitle)
@@ -87,26 +83,6 @@ struct ContentView: View {
     
     private func widthThatBestFits(cardCount: Int) -> CGFloat {
         330.0 / CGFloat(cardCount).squareRoot().rounded(.up)
-    }
-    
-    private var removeCard: some View {
-        Button {
-            if emojiCount > 1 {
-                emojiCount -= 1
-            }
-        } label: {
-            Image(systemName: "minus.circle")
-        }
-    }
-    
-    private var addCard: some View {
-        Button {
-            if emojiCount < emojis.count {
-                emojiCount += 1
-            }
-        } label: {
-            Image(systemName: "plus.circle")
-        }
     }
 }
 
