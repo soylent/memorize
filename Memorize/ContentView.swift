@@ -7,9 +7,11 @@
 
 import SwiftUI
 
+/// The main view of the app.
 struct ContentView: View {
+    /// A reference to the view model.
     @ObservedObject var viewModel: EmojiMemoryGame
-
+    /// The body of the view.
     var body: some View {
         VStack {
             Text(viewModel.currentThemeName).font(.largeTitle)
@@ -32,10 +34,13 @@ struct ContentView: View {
     }
 }
 
+/// A view that represents a single card.
 struct CardView: View {
+    /// The card model.
     let card: MemoryGame<String>.Card
+    /// Colors to fill the back of the card.
     let colors: [Color]
-
+    /// The body of the view.
     var body: some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 24)
