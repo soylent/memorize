@@ -11,17 +11,17 @@ class EmojiMemoryGame: ObservableObject {
     private static let themes = [
         MemoryGameTheme<String>(name: "Animals", emojis: [
             "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗", "🐨"
-        ], numberOfPairsOfCards: 7, color: "green"),
+        ], colors: "green", numberOfPairsOfCards: 7),
         MemoryGameTheme<String>(name: "Food", emojis: [
-            "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], numberOfPairsOfCards: 5, color: "orange"),
+            "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], colors: "orange", numberOfPairsOfCards: 5),
         MemoryGameTheme<String>(name: "Vehicles", emojis: [
-            "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🛻", "🚚", "🚛", "🚜", "🏍", "🚝", "🚲", "🛵", "🛴", "🚁"], numberOfPairsOfCards: 8, color: "blue"),
+            "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🚚", "🚛", "🚜", "🚲", "🛵", "🚁"], colors: "teal", "blue"),
         MemoryGameTheme<String>(name: "Sports", emojis: [
-            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], numberOfPairsOfCards: 7, color: "mint"),
+            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], colors: "mint", "green", randomizeNumberOfPairsOfCards: true),
         MemoryGameTheme<String>(name: "Smileys", emojis: [
-            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🧐"], numberOfPairsOfCards: 7, color: "red"),
+            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🧐"], colors: "orange", "red", numberOfPairsOfCards: 8, randomizeNumberOfPairsOfCards: true),
         MemoryGameTheme<String>(name: "Flags", emojis: [
-            "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], numberOfPairsOfCards: 7, color: "yellow"),
+            "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], colors: "yellow", numberOfPairsOfCards: 6),
     ]
 
     @Published private var model: MemoryGame<String>!
@@ -50,33 +50,35 @@ class EmojiMemoryGame: ObservableObject {
         currentTheme.name
     }
 
-    var currentThemeColor: Color {
-        var color = Color.black
-        switch currentTheme.color {
-        case "blue":
-            color = Color.blue
-        case "brown":
-            color = Color.brown
-        case "green":
-            color = Color.green
-        case "orange":
-            color = Color.orange
-        case "red":
-            color = Color.red
-        case "yellow":
-            color = Color.yellow
-        case "gray":
-            color = Color.gray
-        case "cyan":
-            color = Color.cyan
-        case "teal":
-            color = Color.teal
-        case "mint":
-            color = Color.mint
-        default:
-            break
+    var currentThemeColors: [Color] {
+        currentTheme.colors.map { color in
+            var mappedColor = Color.black
+            switch color {
+            case "blue":
+                mappedColor = Color.blue
+            case "brown":
+                mappedColor = Color.brown
+            case "green":
+                mappedColor = Color.green
+            case "orange":
+                mappedColor = Color.orange
+            case "red":
+                mappedColor = Color.red
+            case "yellow":
+                mappedColor = Color.yellow
+            case "gray":
+                mappedColor = Color.gray
+            case "cyan":
+                mappedColor = Color.cyan
+            case "teal":
+                mappedColor = Color.teal
+            case "mint":
+                mappedColor = Color.mint
+            default:
+                break
+            }
+            return mappedColor
         }
-        return color
     }
 
     var currentScore: Int {

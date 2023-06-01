@@ -11,12 +11,16 @@ struct MemoryGameTheme<CardContent> {
     let name: String
     let emojis: [CardContent]
     let numberOfPairsOfCards: Int
-    let color: String
+    let colors: [String]
 
-    init(name: String, emojis: [CardContent], numberOfPairsOfCards: Int, color: String) {
+    init(name: String, emojis: [CardContent], colors: String..., numberOfPairsOfCards: Int? = nil, randomizeNumberOfPairsOfCards: Bool = false) {
         self.name = name
         self.emojis = emojis
-        self.numberOfPairsOfCards = min(max(0, numberOfPairsOfCards), emojis.count)
-        self.color = color
+        self.colors = colors
+        var _numberOfPairsOfCards = min(max(1, numberOfPairsOfCards ?? emojis.count), emojis.count)
+        if randomizeNumberOfPairsOfCards {
+            _numberOfPairsOfCards = Int.random(in: 1..._numberOfPairsOfCards)
+        }
+        self.numberOfPairsOfCards = _numberOfPairsOfCards
     }
 }
