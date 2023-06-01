@@ -27,30 +27,29 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
 
     mutating func choose(_ card: Card) {
-        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id }),
-           !cards[chosenIndex].isFaceUp,
-           !cards[chosenIndex].isMatched
-        {
-            if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
-                if cards[chosenIndex].content == cards[potentialMatchIndex].content {
-                    cards[chosenIndex].isMatched = true
-                    cards[potentialMatchIndex].isMatched = true
+        guard let chosenIndex = cards.firstIndex(where: { $0.id == card.id }),
+              !cards[chosenIndex].isFaceUp,
+              !cards[chosenIndex].isMatched else { return }
 
-                    currentScore += MemoryGame.matchPoints
-                } else if seenCardIndices.contains(chosenIndex) || seenCardIndices.contains(potentialMatchIndex) {
-                    currentScore += MemoryGame.mismatchPoints
-                }
-                indexOfTheOneAndOnlyFaceUpCard = nil
-                seenCardIndices.insert(chosenIndex)
-                seenCardIndices.insert(potentialMatchIndex)
-            } else {
-                for index in cards.indices {
-                    cards[index].isFaceUp = false
-                }
-                indexOfTheOneAndOnlyFaceUpCard = chosenIndex
+        if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+            if cards[chosenIndex].content == cards[potentialMatchIndex].content {
+                cards[chosenIndex].isMatched = true
+                cards[potentialMatchIndex].isMatched = true
+
+                currentScore += MemoryGame.matchPoints
+            } else if seenCardIndices.contains(chosenIndex) || seenCardIndices.contains(potentialMatchIndex) {
+                currentScore += MemoryGame.mismatchPoints
             }
-            cards[chosenIndex].isFaceUp.toggle()
+            indexOfTheOneAndOnlyFaceUpCard = nil
+            seenCardIndices.insert(chosenIndex)
+            seenCardIndices.insert(potentialMatchIndex)
+        } else {
+            for index in cards.indices {
+                cards[index].isFaceUp = false
+            }
+            indexOfTheOneAndOnlyFaceUpCard = chosenIndex
         }
+        cards[chosenIndex].isFaceUp.toggle()
     }
 
     struct Card: Identifiable {
