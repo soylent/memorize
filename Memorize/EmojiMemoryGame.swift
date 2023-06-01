@@ -17,7 +17,7 @@ class EmojiMemoryGame: ObservableObject {
         MemoryGameTheme<String>(name: "Vehicles", emojis: [
             "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🛻", "🚚", "🚛", "🚜", "🏍", "🚝", "🚲", "🛵", "🛴", "🚁"], numberOfPairsOfCards: 8, color: "blue"),
         MemoryGameTheme<String>(name: "Sports", emojis: [
-            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], numberOfPairsOfCards: 7, color: "brown"),
+            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], numberOfPairsOfCards: 7, color: "mint"),
         MemoryGameTheme<String>(name: "Smileys", emojis: [
             "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🧐"], numberOfPairsOfCards: 7, color: "red"),
         MemoryGameTheme<String>(name: "Flags", emojis: [
@@ -51,7 +51,32 @@ class EmojiMemoryGame: ObservableObject {
     }
 
     var currentThemeColor: Color {
-        Color(currentTheme.color)
+        var color = Color.black
+        switch currentTheme.color {
+        case "blue":
+            color = Color.blue
+        case "brown":
+            color = Color.brown
+        case "green":
+            color = Color.green
+        case "orange":
+            color = Color.orange
+        case "red":
+            color = Color.red
+        case "yellow":
+            color = Color.yellow
+        case "gray":
+            color = Color.gray
+        case "cyan":
+            color = Color.cyan
+        case "teal":
+            color = Color.teal
+        case "mint":
+            color = Color.mint
+        default:
+            break
+        }
+        return color
     }
 
     var currentScore: Int {
