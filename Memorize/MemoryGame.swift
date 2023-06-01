@@ -10,11 +10,14 @@ import Foundation
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
     private var indexOfTheOneAndOnlyFaceUpCard: Int?
+    private var timeOfLastMatch: Date = Date()
     private(set) var currentScore = 0
     private var seenCardIndices = Set<Int>()
 
-    private static var matchPoints: Int { 2 }
-    private static var mismatchPoints: Int { -1 }
+    private var matchPoints: Int {
+        max(10 + Int(timeOfLastMatch.timeIntervalSinceNow), 1) * 2
+    }
+    private let mismatchPoints = -1
 
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
         cards = Array<Card>()
@@ -36,9 +39,10 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 cards[chosenIndex].isMatched = true
                 cards[potentialMatchIndex].isMatched = true
 
-                currentScore += MemoryGame.matchPoints
+                currentScore += matchPoints
+                timeOfLastMatch = Date()
             } else if seenCardIndices.contains(chosenIndex) || seenCardIndices.contains(potentialMatchIndex) {
-                currentScore += MemoryGame.mismatchPoints
+                currentScore += mismatchPoints
             }
             indexOfTheOneAndOnlyFaceUpCard = nil
             seenCardIndices.insert(chosenIndex)
