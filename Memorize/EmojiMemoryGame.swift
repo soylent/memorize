@@ -19,7 +19,7 @@ class EmojiMemoryGame: ObservableObject {
     ]
 
     @Published private var model: MemoryGame<String>!
-    @Published private var currentTheme: MemoryGameTheme<String>!
+    private var currentTheme: MemoryGameTheme<String>!
 
     private static func makeMemoryGame(_ theme: MemoryGameTheme<String>) -> MemoryGame<String> {
         MemoryGame<String>(numberOfPairsOfCards: theme.numberOfPairsOfCards) { pairIndex in
@@ -47,6 +47,10 @@ class EmojiMemoryGame: ObservableObject {
 
     var currentThemeColor: Color {
         Color(currentTheme.color)
+    }
+
+    var currentScore: Int {
+        model.currentScore
     }
 
     func choose(_ card: MemoryGame<String>.Card) {
