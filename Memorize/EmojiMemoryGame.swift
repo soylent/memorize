@@ -16,6 +16,12 @@ class EmojiMemoryGame: ObservableObject {
             "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], numberOfPairsOfCards: 5, color: "orange"),
         MemoryGameTheme<String>(name: "Vehicles", emojis: [
             "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🛻", "🚚", "🚛", "🚜", "🏍", "🚝", "🚲", "🛵", "🛴", "🚁"], numberOfPairsOfCards: 8, color: "blue"),
+        MemoryGameTheme<String>(name: "Sports", emojis: [
+            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], numberOfPairsOfCards: 7, color: "brown"),
+        MemoryGameTheme<String>(name: "Smileys", emojis: [
+            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🧐"], numberOfPairsOfCards: 7, color: "red"),
+        MemoryGameTheme<String>(name: "Flags", emojis: [
+            "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], numberOfPairsOfCards: 7, color: "yellow"),
     ]
 
     @Published private var model: MemoryGame<String>!
