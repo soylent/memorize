@@ -17,7 +17,7 @@ struct EmojiMemoryGameView: View {
             Text(game.currentThemeName).font(.largeTitle)
             Text("Score: \(game.currentScore)")
             ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
                     ForEach(game.cards) { card in
                         CardView(card: card, colors: game.currentThemeColors).aspectRatio(2/3, contentMode: .fit).onTapGesture {
                             game.choose(card)
@@ -42,18 +42,30 @@ struct CardView: View {
     let colors: [Color]
     /// The body of the view.
     var body: some View {
-        ZStack {
-            let shape = RoundedRectangle(cornerRadius: 24)
-            if card.isFaceUp {
-                shape.fill().foregroundColor(.white)
-                shape.strokeBorder(lineWidth: 3)
-                Text(card.content).font(.largeTitle)
-            } else if card.isMatched {
-                shape.opacity(0)
-            } else {
-                shape.fill(Gradient(colors: colors))
+        GeometryReader { geometry in
+            ZStack {
+                let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
+                if card.isFaceUp {
+                    shape.fill().foregroundColor(.white)
+                    shape.strokeBorder(lineWidth: DrawingConstants.lineWidth)
+                    Text(card.content).font(font(in: geometry.size))
+                } else if card.isMatched {
+                    shape.opacity(0)
+                } else {
+                    shape.fill(Gradient(colors: colors))
+                }
             }
         }
+    }
+    /// Returns a `Font` that fits the given `size`.
+    private func font(in size: CGSize) -> Font {
+        Font.system(size: min(size.width, size.height) * DrawingConstants.fontScale)
+    }
+    /// Constants that determine card appearance.
+    private struct DrawingConstants {
+        static let cornerRadius: CGFloat = 12
+        static let lineWidth: CGFloat = 1
+        static let fontScale: CGFloat = 0.75
     }
 }
 
