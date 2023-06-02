@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  EmojiMemoryGameView.swift
 //  Memorize
 //
 //  Created by user on 4/11/23.
@@ -8,25 +8,25 @@
 import SwiftUI
 
 /// The main view of the app.
-struct ContentView: View {
+struct EmojiMemoryGameView: View {
     /// A reference to the view model.
-    @ObservedObject var viewModel: EmojiMemoryGame
+    @ObservedObject var game: EmojiMemoryGame
     /// The body of the view.
     var body: some View {
         VStack {
-            Text(viewModel.currentThemeName).font(.largeTitle)
-            Text("Score: \(viewModel.currentScore)")
+            Text(game.currentThemeName).font(.largeTitle)
+            Text("Score: \(game.currentScore)")
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
-                    ForEach(viewModel.cards) { card in
-                        CardView(card: card, colors: viewModel.currentThemeColors).aspectRatio(2/3, contentMode: .fit).onTapGesture {
-                            viewModel.choose(card)
+                    ForEach(game.cards) { card in
+                        CardView(card: card, colors: game.currentThemeColors).aspectRatio(2/3, contentMode: .fit).onTapGesture {
+                            game.choose(card)
                         }
                     }
                 }}
             .padding(.horizontal)
             Button {
-                viewModel.resetGame()
+                game.resetGame()
             } label: {
                 Image(systemName: "arrow.clockwise.circle").font(.largeTitle)
             }
@@ -37,7 +37,7 @@ struct ContentView: View {
 /// A view that represents a single card.
 struct CardView: View {
     /// The card model.
-    let card: MemoryGame<String>.Card
+    let card: EmojiMemoryGame.Card
     /// Colors to fill the back of the card.
     let colors: [Color]
     /// The body of the view.
@@ -57,9 +57,9 @@ struct CardView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct EmojiMemoryGameView_Previews: PreviewProvider {
     static var previews: some View {
         let game = EmojiMemoryGame()
-        ContentView(viewModel: game)
+        EmojiMemoryGameView(game: game)
     }
 }
