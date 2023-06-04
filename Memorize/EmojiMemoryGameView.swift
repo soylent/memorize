@@ -16,15 +16,11 @@ struct EmojiMemoryGameView: View {
         VStack {
             Text(game.currentThemeName).font(.largeTitle)
             Text("Score: \(game.currentScore)")
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 80))]) {
-                    ForEach(game.cards) { card in
-                        CardView(card: card, colors: game.currentThemeColors).aspectRatio(2/3, contentMode: .fit).onTapGesture {
-                            game.choose(card)
-                        }
-                    }
-                }}
-            .padding(.horizontal)
+            AspectVGrid(items: game.cards, aspectRatio: 5/8) { card in
+                CardView(card: card, colors: game.currentThemeColors)
+                .padding(4)
+                .onTapGesture { game.choose(card) }
+            }.padding(.horizontal)
             Button {
                 game.resetGame()
             } label: {
