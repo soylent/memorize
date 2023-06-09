@@ -11,6 +11,7 @@ import SwiftUI
 struct EmojiMemoryGameView: View {
     /// A reference to the view model.
     @ObservedObject var game: EmojiMemoryGame
+
     /// The body of the view.
     var body: some View {
         VStack {
@@ -36,31 +37,26 @@ struct CardView: View {
     let card: EmojiMemoryGame.Card
     /// Colors to fill the back of the card.
     let colors: [Color]
+
     /// The body of the view.
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
-                if card.isFaceUp {
-                    shape.fill().foregroundColor(.white)
-                    shape.strokeBorder(lineWidth: DrawingConstants.lineWidth)
-                    Pie(startAngle: DrawingConstants.pieStartAngle,
-                        endAngle: DrawingConstants.pieEndAngle)
-                        .padding(DrawingConstants.piePadding)
-                        .opacity(DrawingConstants.pieOpacity)
-                    Text(card.content).font(font(in: geometry.size))
-                } else if card.isMatched {
-                    shape.opacity(0)
-                } else {
-                    shape.fill(Gradient(colors: colors))
-                }
+                Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: DrawingConstants.pieEndAngle)
+                    .padding(DrawingConstants.piePadding)
+                    .opacity(DrawingConstants.pieOpacity)
+                Text(card.content).font(font(in: geometry.size))
             }
+            .cardify(isFaceUp: card.isFaceUp, colors: colors)
+            .opacity(!card.isFaceUp && card.isMatched ? 0 : 1)
         }
     }
+
     /// Returns a `Font` that fits the given `size`.
     private func font(in size: CGSize) -> Font {
         Font.system(size: min(size.width, size.height) * DrawingConstants.fontScale)
     }
+
     /// Constants that determine card appearance.
     private struct DrawingConstants {
         static let cornerRadius: CGFloat = 12
