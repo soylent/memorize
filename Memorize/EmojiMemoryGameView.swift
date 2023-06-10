@@ -14,9 +14,12 @@ struct EmojiMemoryGameView: View {
 
     @State private var dealt = Set<Int>()
 
+    @Namespace private var dealingNamespace
+
+    private var undealtCards: [EmojiMemoryGame.Card] { game.cards.filter { !isDealt($0) } }
+
     private func dealCards() {
-        dealt.removeAll()
-        withAnimation {
+        withAnimation(.easeInOut(duration: 5)) {
             for card in game.cards {
                 dealt.insert(card.id)
             }
@@ -33,17 +36,19 @@ struct EmojiMemoryGameView: View {
             Text(game.currentThemeName).font(.largeTitle)
             Text("Score: \(game.currentScore)")
             cardGrid
+            deckBody
             bottomMenu
         }
         .padding(.horizontal)
     }
 
     private var cardGrid: some View {
-        AspectVGrid(items: game.cards, aspectRatio: 5/8) { card in
+        AspectVGrid(items: game.cards, aspectRatio: CardConstants.aspectRatio) { card in
             if isDealt(card) && (card.isFaceUp || !card.isMatched) {
                 CardView(card: card, colors: game.currentThemeColors)
-                    .padding(4)
-                    .transition(.asymmetric(insertion: .scale, removal: .scale))
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .padding(CardConstants.padding)
+                    .transition(.asymmetric(insertion: .identity, removal: .scale))
                     .onTapGesture {
                         withAnimation {
                             game.choose(card)
@@ -53,7 +58,19 @@ struct EmojiMemoryGameView: View {
                 Color.clear
             }
         }
-        .onAppear {
+    }
+
+    private var deckBody: some View {
+        ZStack {
+            ForEach(undealtCards) { card in
+                CardView(card: card, colors: game.currentThemeColors)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(.asymmetric(insertion: .opacity, removal: .identity))
+            }
+        }
+        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
+        .foregroundColor(game.currentThemeColors.first!)
+        .onTapGesture {
             dealCards()
         }
     }
@@ -61,8 +78,8 @@ struct EmojiMemoryGameView: View {
     private var bottomMenu: some View {
         HStack {
             Button {
+                dealt.removeAll()
                 game.resetGame()
-                dealCards()
             } label: {
                 Image(systemName: "arrow.clockwise.circle")
             }
@@ -76,6 +93,13 @@ struct EmojiMemoryGameView: View {
             }
         }
         .font(.largeTitle)
+    }
+
+    struct CardConstants {
+        static let aspectRatio: CGFloat = 5/9
+        static let padding: CGFloat = 4
+        static let undealtWidth: CGFloat = 60
+        static let undealtHeight: CGFloat = undealtWidth / aspectRatio
     }
 }
 
