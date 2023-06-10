@@ -45,16 +45,20 @@ struct CardView: View {
                 Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: DrawingConstants.pieEndAngle)
                     .padding(DrawingConstants.piePadding)
                     .opacity(DrawingConstants.pieOpacity)
-                Text(card.content).font(font(in: geometry.size))
+                Text(card.content)
+                    .rotationEffect(Angle(degrees: card.isMatched ? 360 : 0))
+                    .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false))
+                    .font(Font.system(size: DrawingConstants.fontSize))
+                    .scaleEffect(scale(thatFits: geometry.size))
             }
             .cardify(isFaceUp: card.isFaceUp, colors: colors)
             .opacity(!card.isFaceUp && card.isMatched ? 0 : 1)
         }
     }
 
-    /// Returns a `Font` that fits the given `size`.
-    private func font(in size: CGSize) -> Font {
-        Font.system(size: min(size.width, size.height) * DrawingConstants.fontScale)
+    /// Returns the scaling factor for the font size to fit in the given `size`.
+    private func scale(thatFits size: CGSize) -> CGFloat {
+        min(size.width, size.height) * DrawingConstants.fontScale / DrawingConstants.fontSize
     }
 
     /// Constants that determine card appearance.
@@ -62,6 +66,7 @@ struct CardView: View {
         static let cornerRadius: CGFloat = 12
         static let lineWidth: CGFloat = 1
         static let fontScale: CGFloat = 0.7
+        static let fontSize: CGFloat = 32
         static let piePadding: CGFloat = 5
         static let pieOpacity: CGFloat = 0.5
         static let pieStartAngle = Angle(degrees: 270)
