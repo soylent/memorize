@@ -12,21 +12,49 @@ struct EmojiMemoryGameView: View {
     /// A reference to the view model.
     @ObservedObject var game: EmojiMemoryGame
 
+    @State private var dealt = Set<Int>()
+
+    private func dealCards() {
+        dealt.removeAll()
+        withAnimation {
+            for card in game.cards {
+                dealt.insert(card.id)
+            }
+        }
+    }
+
+    private func isDealt(_ card: EmojiMemoryGame.Card) -> Bool {
+        dealt.contains(card.id)
+    }
+
     /// The body of the view.
     var body: some View {
         VStack {
             Text(game.currentThemeName).font(.largeTitle)
             Text("Score: \(game.currentScore)")
-            AspectVGrid(items: game.cards, aspectRatio: 5/8) { card in
-                CardView(card: card, colors: game.currentThemeColors)
-                .padding(4)
-                .onTapGesture {
-                    withAnimation {
-                        game.choose(card)
-                    }
-                }
-            }.padding(.horizontal)
+            cardGrid
             bottomMenu
+        }
+        .padding(.horizontal)
+    }
+
+    private var cardGrid: some View {
+        AspectVGrid(items: game.cards, aspectRatio: 5/8) { card in
+            if isDealt(card) && (card.isFaceUp || !card.isMatched) {
+                CardView(card: card, colors: game.currentThemeColors)
+                    .padding(4)
+                    .transition(.asymmetric(insertion: .scale, removal: .scale))
+                    .onTapGesture {
+                        withAnimation {
+                            game.choose(card)
+                        }
+                    }
+            } else {
+                Color.clear
+            }
+        }
+        .onAppear {
+            dealCards()
         }
     }
 
@@ -34,6 +62,7 @@ struct EmojiMemoryGameView: View {
         HStack {
             Button {
                 game.resetGame()
+                dealCards()
             } label: {
                 Image(systemName: "arrow.clockwise.circle")
             }
@@ -59,22 +88,18 @@ struct CardView: View {
 
     /// The body of the view.
     var body: some View {
-        if card.isFaceUp || !card.isMatched {
-            GeometryReader { geometry in
-                ZStack {
-                    Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: DrawingConstants.pieEndAngle)
-                        .padding(DrawingConstants.piePadding)
-                        .opacity(DrawingConstants.pieOpacity)
-                    Text(card.content)
-                        .rotationEffect(Angle(degrees: card.isMatched ? 360 : 0))
-                        .animation(.linear(duration: 1).repeatForever(autoreverses: false))
-                        .font(Font.system(size: DrawingConstants.fontSize))
-                        .scaleEffect(scale(thatFits: geometry.size))
-                }
-                .cardify(isFaceUp: card.isFaceUp, colors: colors)
+        GeometryReader { geometry in
+            ZStack {
+                Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: DrawingConstants.pieEndAngle)
+                    .padding(DrawingConstants.piePadding)
+                    .opacity(DrawingConstants.pieOpacity)
+                Text(card.content)
+                    .rotationEffect(Angle(degrees: card.isMatched ? 360 : 0))
+                    .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: card.isMatched)
+                    .font(Font.system(size: DrawingConstants.fontSize))
+                    .scaleEffect(scale(thatFits: geometry.size))
             }
-        } else {
-            Color.clear
+            .cardify(isFaceUp: card.isFaceUp, colors: colors)
         }
     }
 
