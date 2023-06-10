@@ -20,7 +20,11 @@ struct EmojiMemoryGameView: View {
             AspectVGrid(items: game.cards, aspectRatio: 5/8) { card in
                 CardView(card: card, colors: game.currentThemeColors)
                 .padding(4)
-                .onTapGesture { game.choose(card) }
+                .onTapGesture {
+                    withAnimation {
+                        game.choose(card)
+                    }
+                }
             }.padding(.horizontal)
             bottomMenu
         }
