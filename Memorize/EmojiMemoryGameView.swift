@@ -19,8 +19,8 @@ struct EmojiMemoryGameView: View {
     private var undealtCards: [EmojiMemoryGame.Card] { game.cards.filter { !isDealt($0) } }
 
     private func dealCards() {
-        withAnimation(.easeInOut(duration: 5)) {
-            for card in game.cards {
+        for card in game.cards {
+            withAnimation(dealAnimation(for: card)) {
                 dealt.insert(card.id)
             }
         }
@@ -28,6 +28,18 @@ struct EmojiMemoryGameView: View {
 
     private func isDealt(_ card: EmojiMemoryGame.Card) -> Bool {
         dealt.contains(card.id)
+    }
+
+    private func dealAnimation(for card: EmojiMemoryGame.Card) -> Animation {
+        var delay = 0.0
+        if let cardIndex = game.cardIndex(for: card) {
+            delay = Double(cardIndex) * (CardConstants.totalDealDuration / Double(game.cards.count))
+        }
+        return Animation.easeInOut(duration: CardConstants.dealDuration).delay(delay)
+    }
+
+    private func zIndex(for card: EmojiMemoryGame.Card) -> Double {
+        -Double(game.cardIndex(for: card) ?? 0)
     }
 
     /// The body of the view.
@@ -46,6 +58,7 @@ struct EmojiMemoryGameView: View {
         AspectVGrid(items: game.cards, aspectRatio: CardConstants.aspectRatio) { card in
             if isDealt(card) && (card.isFaceUp || !card.isMatched) {
                 CardView(card: card, colors: game.currentThemeColors)
+                    .zIndex(zIndex(for: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(CardConstants.padding)
                     .transition(.asymmetric(insertion: .identity, removal: .scale))
@@ -64,6 +77,7 @@ struct EmojiMemoryGameView: View {
         ZStack {
             ForEach(undealtCards) { card in
                 CardView(card: card, colors: game.currentThemeColors)
+                    .zIndex(zIndex(for: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(.asymmetric(insertion: .opacity, removal: .identity))
             }
@@ -97,7 +111,9 @@ struct EmojiMemoryGameView: View {
 
     struct CardConstants {
         static let aspectRatio: CGFloat = 5/9
+        static let dealDuration: Double = 0.5
         static let padding: CGFloat = 4
+        static let totalDealDuration: Double = 2
         static let undealtWidth: CGFloat = 60
         static let undealtHeight: CGFloat = undealtWidth / aspectRatio
     }

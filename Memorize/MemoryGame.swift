@@ -46,9 +46,13 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         shuffle()
     }
 
+    func cardIndex(for card: Card) -> Int? {
+         cards.firstIndex { $0.id == card.id }
+    }
+
     /// Updates the game state when the playes chooses the given `card`.
     mutating func choose(_ card: Card) {
-        guard let chosenIndex = cards.firstIndex(where: { $0.id == card.id }),
+        guard let chosenIndex = cardIndex(for: card),
               !cards[chosenIndex].isFaceUp,
               !cards[chosenIndex].isMatched else { return }
 

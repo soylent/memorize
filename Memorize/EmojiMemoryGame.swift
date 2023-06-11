@@ -98,6 +98,10 @@ class EmojiMemoryGame: ObservableObject {
         model.currentScore
     }
 
+    func cardIndex(for card: Card) -> Int? {
+        model.cardIndex(for: card)
+    }
+
     // MARK: - Intent(s)
 
     /// Chooses the given `card` and updates the game accordingly.
