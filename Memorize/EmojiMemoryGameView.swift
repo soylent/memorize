@@ -45,10 +45,14 @@ struct EmojiMemoryGameView: View {
     /// The body of the view.
     var body: some View {
         VStack {
-            Text(game.currentThemeName).font(.largeTitle)
-            Text("Score: \(game.currentScore)")
-            cardGrid
-            deckBody
+            ZStack(alignment: .bottom) {
+                VStack {
+                    Text(game.currentThemeName).font(.largeTitle)
+                    Text("Score: \(game.currentScore)")
+                    cardGrid
+                }
+                deckBody
+            }
             bottomMenu
         }
         .padding(.horizontal)
@@ -92,8 +96,10 @@ struct EmojiMemoryGameView: View {
     private var bottomMenu: some View {
         HStack {
             Button {
-                dealt.removeAll()
-                game.resetGame()
+                withAnimation {
+                    dealt.removeAll()
+                    game.resetGame()
+                }
             } label: {
                 Image(systemName: "arrow.clockwise.circle")
             }
@@ -126,13 +132,28 @@ struct CardView: View {
     /// Colors to fill the back of the card.
     let colors: [Color]
 
+    @State private var animatedBonusRemaining = 0.0
+
     /// The body of the view.
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: DrawingConstants.pieEndAngle)
-                    .padding(DrawingConstants.piePadding)
-                    .opacity(DrawingConstants.pieOpacity)
+                Group {
+                    if card.isConsumingBonusTime {
+                        Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: Angle(degrees: (1-animatedBonusRemaining) * 360 - 90))
+                            .onAppear {
+                                animatedBonusRemaining = card.bonusRemaining
+                                withAnimation(.linear(duration: card.bonusTimeRemaining)) {
+                                    animatedBonusRemaining = 0.0
+                                }
+                            }
+                    } else {
+                        Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: Angle(degrees: (1-card.bonusRemaining) * 360 - 90))
+                    }
+                }
+                .padding(DrawingConstants.piePadding)
+                .opacity(DrawingConstants.pieOpacity)
+
                 Text(card.content)
                     .rotationEffect(Angle(degrees: card.isMatched ? 360 : 0))
                     .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: card.isMatched)
@@ -157,7 +178,6 @@ struct CardView: View {
         static let piePadding: CGFloat = 5
         static let pieOpacity: CGFloat = 0.5
         static let pieStartAngle = Angle(degrees: 270)
-        static let pieEndAngle = Angle(degrees: 30)
     }
 }
 
