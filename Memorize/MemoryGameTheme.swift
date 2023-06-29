@@ -8,15 +8,17 @@
 import Foundation
 
 /// A model that represents a card theme.
-struct MemoryGameTheme<CardContent> {
+struct MemoryGameTheme<CardContent>: Codable, Identifiable where CardContent: Codable, CardContent: Equatable {
     /// The name of the theme.
-    let name: String
+    var name: String
     /// Emojis comprising the theme.
-    let emojis: [CardContent]
+    var emojis: [CardContent]
     /// Colors to fill the back of each card.
-    let colors: [String]
+    var colors: [String]
     /// The number of pairs of cards to show.
-    let numberOfPairsOfCards: Int
+    var numberOfPairsOfCards: Int
+    /// Unique theme identifier.
+    let id: Int
 
     /// Creates an instance of a theme.
     ///
@@ -35,5 +37,25 @@ struct MemoryGameTheme<CardContent> {
             clampedNumberOfPairsOfCards = Int.random(in: 1 ... clampedNumberOfPairsOfCards)
         }
         self.numberOfPairsOfCards = clampedNumberOfPairsOfCards
+        idCounter += 1
+        self.id = idCounter
+    }
+
+    mutating func removeEmoji(_ emoji: CardContent) {
+        emojis.removeAll { $0 == emoji }
+    }
+
+    mutating func addEmojis(_ emojis: [CardContent]) {
+        for emoji in emojis {
+            if !self.emojis.contains(emoji) {
+                self.emojis.append(emoji)
+            }
+        }
+    }
+
+    mutating func setColor(_ color: String) {
+        colors = [color]
     }
 }
+
+private var idCounter = 0
