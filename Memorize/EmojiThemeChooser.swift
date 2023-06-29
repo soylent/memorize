@@ -11,6 +11,8 @@ struct EmojiThemeChooser: View {
     @ObservedObject var themeStore: EmojiThemeStore
 
     var body: some View {
+        // NOTE: Due to a bug in SwiftUI, animations are not working in NavigationStack.
+        // https://developer.apple.com/forums/thread/728132
         NavigationStack {
             List {
                 ForEach(themeStore.themes) { theme in
