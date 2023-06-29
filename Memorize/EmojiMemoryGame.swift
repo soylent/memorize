@@ -23,7 +23,7 @@ class EmojiMemoryGame: ObservableObject {
         MemoryGameTheme(name: "Sports", emojis: [
             "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], colors: "mint", "green", randomizeNumberOfPairsOfCards: true),
         MemoryGameTheme(name: "Smileys", emojis: [
-            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🧐"], colors: "orange", "red", numberOfPairsOfCards: 8, randomizeNumberOfPairsOfCards: true),
+            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🤫"], colors: "orange", "red", numberOfPairsOfCards: 8, randomizeNumberOfPairsOfCards: true),
         MemoryGameTheme(name: "Flags", emojis: [
             "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], colors: "yellow", numberOfPairsOfCards: 6),
     ]
@@ -31,7 +31,7 @@ class EmojiMemoryGame: ObservableObject {
     /// An instance of the game model.
     @Published private var model: MemoryGame<String>!
     /// An instance of the current theme.
-    private var currentTheme: MemoryGameTheme<String>!
+    private var theme: MemoryGameTheme<String>!
 
     /// Returns an instance of the game model based on the given `theme`.
     private static func makeMemoryGame(_ theme: MemoryGameTheme<String>) -> MemoryGame<String> {
@@ -47,8 +47,8 @@ class EmojiMemoryGame: ObservableObject {
     /// Starts a new game.
     func resetGame() {
         let randomTheme = EmojiMemoryGame.themes.randomElement()!
-        currentTheme = randomTheme
-        model = EmojiMemoryGame.makeMemoryGame(currentTheme)
+        theme = randomTheme
+        model = EmojiMemoryGame.makeMemoryGame(theme)
     }
 
     /// All available cards.
@@ -58,12 +58,12 @@ class EmojiMemoryGame: ObservableObject {
 
     /// The currently selected theme.
     var currentThemeName: String {
-        currentTheme.name
+        theme.name
     }
 
     /// The current theme colors that are used to fill the back of each card.
     var currentThemeColors: [Color] {
-        currentTheme.colors.map { color in
+        theme.colors.map { color in
             var mappedColor = Color.black
             switch color {
             case "blue":
