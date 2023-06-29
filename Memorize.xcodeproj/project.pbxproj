@@ -23,7 +23,6 @@
 		CE0C5FBF2A2B02DF00F20990 /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		CE14C00A2A270E2200736C07 /* MemoryGameTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryGameTheme.swift; sourceTree = "<group>"; };
 		CE1BE3702A32DA7500546CBA /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
-		CE52E3B72A29A068005AAFF6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CE54F0922A2C0F1900CA58E5 /* Pie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pie.swift; sourceTree = SOURCE_ROOT; };
 		CE95E0FE2A19EBA100A4144B /* MemoryGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryGame.swift; sourceTree = "<group>"; };
 		CE95E1002A19EE8000A4144B /* EmojiMemoryGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiMemoryGame.swift; sourceTree = "<group>"; };
@@ -65,7 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				CE54F0922A2C0F1900CA58E5 /* Pie.swift */,
-				CE52E3B72A29A068005AAFF6 /* Info.plist */,
 				CEFFDAB529E5DAD700B2FA58 /* MemorizeApp.swift */,
 				CEFFDAB729E5DAD700B2FA58 /* EmojiMemoryGameView.swift */,
 				CE1BE3702A32DA7500546CBA /* Cardify.swift */,

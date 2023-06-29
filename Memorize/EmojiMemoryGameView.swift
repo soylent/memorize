@@ -20,7 +20,7 @@ struct EmojiMemoryGameView: View {
 
     private func dealCards() {
         for card in game.cards {
-            withAnimation(dealAnimation(for: card)) {
+            let _ = withAnimation(dealAnimation(for: card)) {
                 dealt.insert(card.id)
             }
         }
@@ -155,6 +155,7 @@ struct CardView: View {
                 .opacity(DrawingConstants.pieOpacity)
 
                 Text(card.content)
+                    .id(card.content)
                     .rotationEffect(Angle(degrees: card.isMatched ? 360 : 0))
                     .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: card.isMatched)
                     .font(Font.system(size: DrawingConstants.fontSize))
@@ -184,7 +185,6 @@ struct CardView: View {
 struct EmojiMemoryGameView_Previews: PreviewProvider {
     static var previews: some View {
         let game = EmojiMemoryGame()
-        game.choose(game.cards.first!)
         return EmojiMemoryGameView(game: game)
     }
 }
