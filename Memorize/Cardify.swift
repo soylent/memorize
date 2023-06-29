@@ -20,7 +20,7 @@ struct Cardify: Animatable, ViewModifier {
     }
 
     init(isFaceUp: Bool, colors: [Color]) {
-        self.rotation = isFaceUp ? 0 : 180
+        rotation = isFaceUp ? 0 : 180
         self.colors = colors
     }
 
@@ -40,7 +40,7 @@ struct Cardify: Animatable, ViewModifier {
     }
 
     /// Constants that determine card appearance.
-    private struct DrawingConstants {
+    private enum DrawingConstants {
         static let cornerRadius: CGFloat = 12
         static let lineWidth: CGFloat = 1
     }

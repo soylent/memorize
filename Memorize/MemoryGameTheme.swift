@@ -30,10 +30,10 @@ struct MemoryGameTheme<CardContent> {
         self.name = name
         self.emojis = emojis
         self.colors = colors
-        var _numberOfPairsOfCards = min(max(1, numberOfPairsOfCards ?? emojis.count), emojis.count)
+        var clampedNumberOfPairsOfCards = min(max(1, numberOfPairsOfCards ?? emojis.count), emojis.count)
         if randomizeNumberOfPairsOfCards {
-            _numberOfPairsOfCards = Int.random(in: 1..._numberOfPairsOfCards)
+            clampedNumberOfPairsOfCards = Int.random(in: 1 ... clampedNumberOfPairsOfCards)
         }
-        self.numberOfPairsOfCards = _numberOfPairsOfCards
+        self.numberOfPairsOfCards = clampedNumberOfPairsOfCards
     }
 }

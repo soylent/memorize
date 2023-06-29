@@ -13,18 +13,18 @@ class EmojiMemoryGame: ObservableObject {
 
     /// All available themes.
     private static let themes = [
-        MemoryGameTheme<String>(name: "Animals", emojis: [
-            "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗", "🐨"
+        MemoryGameTheme(name: "Animals", emojis: [
+            "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗", "🐨",
         ], colors: "green", numberOfPairsOfCards: 7),
-        MemoryGameTheme<String>(name: "Food", emojis: [
+        MemoryGameTheme(name: "Food", emojis: [
             "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], colors: "orange", numberOfPairsOfCards: 5),
-        MemoryGameTheme<String>(name: "Vehicles", emojis: [
+        MemoryGameTheme(name: "Vehicles", emojis: [
             "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🚚", "🚛", "🚜", "🚲", "🛵", "🚁"], colors: "teal", "blue"),
-        MemoryGameTheme<String>(name: "Sports", emojis: [
+        MemoryGameTheme(name: "Sports", emojis: [
             "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], colors: "mint", "green", randomizeNumberOfPairsOfCards: true),
-        MemoryGameTheme<String>(name: "Smileys", emojis: [
+        MemoryGameTheme(name: "Smileys", emojis: [
             "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🧐"], colors: "orange", "red", numberOfPairsOfCards: 8, randomizeNumberOfPairsOfCards: true),
-        MemoryGameTheme<String>(name: "Flags", emojis: [
+        MemoryGameTheme(name: "Flags", emojis: [
             "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], colors: "yellow", numberOfPairsOfCards: 6),
     ]
 

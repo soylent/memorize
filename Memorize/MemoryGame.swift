@@ -10,9 +10,9 @@ import Foundation
 /// A model for the game logic.
 struct MemoryGame<CardContent> where CardContent: Equatable {
     /// All available cards.
-    private(set) var cards: Array<Card>
+    private(set) var cards: [Card]
     /// The time of the last successful card match.
-    private var timeOfLastMatch: Date = Date()
+    private var timeOfLastMatch: Date = .init()
     /// Player's score.
     private(set) var currentScore = 0
     /// Indices of the cards that the player has already seen.
@@ -27,6 +27,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     private var matchPoints: Int {
         max(10 + Int(timeOfLastMatch.timeIntervalSinceNow), 1) * 2
     }
+
     /// The number of points for a mismatch.
     private let mismatchPoints = -1
 
@@ -37,17 +38,17 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     /// - Parameter createCardContent: a closure that is called to get the face of each card.
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
         cards = []
-        for pairIndex in 0..<numberOfPairsOfCards {
+        for pairIndex in 0 ..< numberOfPairsOfCards {
             let content = createCardContent(pairIndex)
-            cards.append(Card(content: content, id: pairIndex*2))
-            cards.append(Card(content: content, id: pairIndex*2 + 1))
+            cards.append(Card(content: content, id: pairIndex * 2))
+            cards.append(Card(content: content, id: pairIndex * 2 + 1))
         }
 
         shuffle()
     }
 
     func cardIndex(for card: Card) -> Int? {
-         cards.firstIndex { $0.id == card.id }
+        cards.firstIndex { $0.id == card.id }
     }
 
     /// Updates the game state when the playes chooses the given `card`.
@@ -91,12 +92,14 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                 }
             }
         }
+
         /// Whether or not the card has been matched.
         var isMatched = false {
             didSet {
                 stopUsingBonusTime()
             }
         }
+
         /// The face of the card.
         let content: CardContent
         /// A unique card identifier.
@@ -156,6 +159,6 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
 extension Array {
     /// Returns the only element stored in a single element array; otherwise returns nil.
     var oneAndOnly: Element? {
-        return count == 1 ? self.first : nil
+        count == 1 ? first : nil
     }
 }

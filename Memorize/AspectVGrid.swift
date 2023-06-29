@@ -21,6 +21,7 @@ struct AspectVGrid<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
         self.aspectRatio = aspectRatio
         self.content = content
     }
+
     /// The body of the view.
     var body: some View {
         GeometryReader { geometry in
@@ -35,12 +36,14 @@ struct AspectVGrid<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
             }
         }
     }
+
     /// Returns an instance of `GridItem` with the given `width`.
     private func adaptiveGridItem(width: CGFloat) -> GridItem {
         var gridItem = GridItem(.adaptive(minimum: width))
         gridItem.spacing = 0
         return gridItem
     }
+
     /// Returns the item width to fit `itemCount` items with `itemAspectRatio`
     /// in the space of the given `size`.
     private func widthThatFits(itemCount: Int, in size: CGSize, itemAspectRatio: CGFloat) -> CGFloat {

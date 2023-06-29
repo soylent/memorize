@@ -20,7 +20,7 @@ struct EmojiMemoryGameView: View {
 
     private func dealCards() {
         for card in game.cards {
-            let _ = withAnimation(dealAnimation(for: card)) {
+            _ = withAnimation(dealAnimation(for: card)) {
                 dealt.insert(card.id)
             }
         }
@@ -60,7 +60,7 @@ struct EmojiMemoryGameView: View {
 
     private var cardGrid: some View {
         AspectVGrid(items: game.cards, aspectRatio: CardConstants.aspectRatio) { card in
-            if isDealt(card) && (card.isFaceUp || !card.isMatched) {
+            if isDealt(card), card.isFaceUp || !card.isMatched {
                 CardView(card: card, colors: game.currentThemeColors)
                     .zIndex(zIndex(for: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
@@ -115,8 +115,8 @@ struct EmojiMemoryGameView: View {
         .font(.largeTitle)
     }
 
-    struct CardConstants {
-        static let aspectRatio: CGFloat = 5/9
+    private enum CardConstants {
+        static let aspectRatio: CGFloat = 5 / 9
         static let dealDuration: Double = 0.5
         static let padding: CGFloat = 4
         static let totalDealDuration: Double = 2
@@ -140,7 +140,7 @@ struct CardView: View {
             ZStack {
                 Group {
                     if card.isConsumingBonusTime {
-                        Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: Angle(degrees: (1-animatedBonusRemaining) * 360 - 90))
+                        Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: Angle(degrees: (1 - animatedBonusRemaining) * 360 - 90))
                             .onAppear {
                                 animatedBonusRemaining = card.bonusRemaining
                                 withAnimation(.linear(duration: card.bonusTimeRemaining)) {
@@ -148,7 +148,7 @@ struct CardView: View {
                                 }
                             }
                     } else {
-                        Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: Angle(degrees: (1-card.bonusRemaining) * 360 - 90))
+                        Pie(startAngle: DrawingConstants.pieStartAngle, endAngle: Angle(degrees: (1 - card.bonusRemaining) * 360 - 90))
                     }
                 }
                 .padding(DrawingConstants.piePadding)
@@ -171,7 +171,7 @@ struct CardView: View {
     }
 
     /// Constants that determine card appearance.
-    private struct DrawingConstants {
+    private enum DrawingConstants {
         static let cornerRadius: CGFloat = 12
         static let lineWidth: CGFloat = 1
         static let fontScale: CGFloat = 0.7
