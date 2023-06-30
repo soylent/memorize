@@ -10,31 +10,62 @@ import SwiftUI
 struct EmojiThemeChooser: View {
     @ObservedObject var themeStore: EmojiThemeStore
 
+    @State private var games: [Int: EmojiMemoryGame]
+    @State private var editMode: EditMode = .inactive
+    @State private var themeToEdit: MemoryGameTheme<String>?
+
+    init(themeStore: EmojiThemeStore) {
+        self.themeStore = themeStore
+        var games = [Int: EmojiMemoryGame]()
+        for theme in themeStore.themes {
+            games[theme.id] = EmojiMemoryGame()
+        }
+        _games = .init(initialValue: games)
+    }
+
     var body: some View {
-        // NOTE: Due to a bug in SwiftUI, animations are not working in NavigationStack.
-        // https://developer.apple.com/forums/thread/728132
-        NavigationStack {
+        NavigationView {
             List {
                 ForEach(themeStore.themes) { theme in
                     NavigationLink {
-                        EmojiThemeEditor(theme: $themeStore.themes[themeStore.themes.firstIndex { $0.id == theme.id }!])
+                        EmojiMemoryGameView(game: games[theme.id]!)
                     } label: { label(for: theme) }
+                }
+                .onDelete { indexSet in
+                    themeStore.themes.remove(atOffsets: indexSet)
+                }
+                .onMove { oldIndexSet, newIndexSet in
+                    themeStore.themes.move(fromOffsets: oldIndexSet, toOffset: newIndexSet)
                 }
             }
             .navigationTitle("Memorize")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                EditButton()
+            }
+            .environment(\.editMode, $editMode)
         }
     }
 
     private func label(for theme: MemoryGameTheme<String>) -> some View {
-            HStack {
-                Circle()
-                    .fill(Gradient(colors: themeColors(for: theme)))
-                    .frame(width: 10)
-                Text(theme.name)
-                Spacer()
-                Text(theme.emojis[..<3].joined())
+        let tapToEdit = TapGesture().onEnded {
+            themeToEdit = theme
+        }
+        return HStack {
+            Circle()
+                .fill(Gradient(colors: themeColors(for: theme)))
+                .frame(width: 10)
+            Text(theme.name)
+            Spacer()
+            let emojiPreviewCount = min(3, theme.emojis.count)
+            Text(theme.emojis[..<emojiPreviewCount].joined())
+        }
+        .sheet(item: $themeToEdit) { theme in
+            if let themeIndex = themeStore.themes.firstIndex { $0.id == theme.id } {
+                EmojiThemeEditor(theme: $themeStore.themes[themeIndex])
             }
+        }
+        .gesture(editMode == .active ? tapToEdit : nil)
     }
 
     /// Returns the colors associated with the given `theme`.
