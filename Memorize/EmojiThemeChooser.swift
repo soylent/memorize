@@ -24,26 +24,42 @@ struct EmojiThemeChooser: View {
     }
 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(themeStore.themes) { theme in
-                    NavigationLink {
-                        EmojiMemoryGameView(game: games[theme.id]!)
-                    } label: { label(for: theme) }
+        VStack(alignment: .trailing) {
+            NavigationView {
+                List {
+                    ForEach(themeStore.themes) { theme in
+                        NavigationLink {
+                            EmojiMemoryGameView(game: games[theme.id]!)
+                        } label: { label(for: theme) }
+                    }
+                    .onDelete { indexSet in
+                        for themeIndex in indexSet {
+                            games.removeValue(forKey: themeStore.themes[themeIndex].id)
+                        }
+                        themeStore.themes.remove(atOffsets: indexSet)
+                    }
+                    .onMove { oldIndexSet, newIndexSet in
+                        themeStore.themes.move(fromOffsets: oldIndexSet, toOffset: newIndexSet)
+                    }
                 }
-                .onDelete { indexSet in
-                    themeStore.themes.remove(atOffsets: indexSet)
+                .navigationTitle("Memorize")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    EditButton()
                 }
-                .onMove { oldIndexSet, newIndexSet in
-                    themeStore.themes.move(fromOffsets: oldIndexSet, toOffset: newIndexSet)
+                .environment(\.editMode, $editMode)
+            }
+            HStack {
+                Button {
+                    let newTheme = themeStore.appendTheme()
+                    games[newTheme.id] = EmojiMemoryGame()
+                    themeToEdit = newTheme
+                } label: {
+                    Image(systemName: "plus.circle")
                 }
             }
-            .navigationTitle("Memorize")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                EditButton()
-            }
-            .environment(\.editMode, $editMode)
+            .font(.title)
+            .padding()
         }
     }
 

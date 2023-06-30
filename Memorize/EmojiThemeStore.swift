@@ -36,4 +36,10 @@ class EmojiThemeStore: ObservableObject {
             themes = Self.themes
         }
     }
+
+    func appendTheme(name: String = "", emojis: [String] = [], color: String = "blue", numberOfPairsOfCards: Int = 6) -> MemoryGameTheme<String> {
+        let newTheme = MemoryGameTheme(name: name, emojis: emojis, colors: color, numberOfPairsOfCards: numberOfPairsOfCards)
+        themes.append(newTheme)
+        return newTheme
+    }
 }
