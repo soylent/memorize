@@ -18,7 +18,7 @@ struct EmojiThemeChooser: View {
         self.themeStore = themeStore
         var games = [Int: EmojiMemoryGame]()
         for theme in themeStore.themes {
-            games[theme.id] = EmojiMemoryGame()
+            games[theme.id] = EmojiMemoryGame(theme: theme)
         }
         _games = .init(initialValue: games)
     }
@@ -52,7 +52,7 @@ struct EmojiThemeChooser: View {
             HStack {
                 Button {
                     let newTheme = themeStore.appendTheme()
-                    games[newTheme.id] = EmojiMemoryGame()
+                    games[newTheme.id] = EmojiMemoryGame(theme: newTheme)
                     themeToEdit = newTheme
                 } label: {
                     Image(systemName: "plus.circle")

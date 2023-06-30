@@ -184,7 +184,8 @@ struct CardView: View {
 
 struct EmojiMemoryGameView_Previews: PreviewProvider {
     static var previews: some View {
-        let game = EmojiMemoryGame()
+        let themeStore = EmojiThemeStore()
+        let game = EmojiMemoryGame(theme: themeStore.themes[0])
         return EmojiMemoryGameView(game: game)
     }
 }

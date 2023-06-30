@@ -10,28 +10,12 @@ import SwiftUI
 /// The view model.
 class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
-
-    /// All available themes.
-    private static let themes = [
-        MemoryGameTheme(name: "Animals", emojis: [
-            "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗", "🐨",
-        ], colors: "green", numberOfPairsOfCards: 7),
-        MemoryGameTheme(name: "Food", emojis: [
-            "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], colors: "orange", numberOfPairsOfCards: 5),
-        MemoryGameTheme(name: "Vehicles", emojis: [
-            "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🚚", "🚛", "🚜", "🚲", "🛵", "🚁"], colors: "teal", "blue"),
-        MemoryGameTheme(name: "Sports", emojis: [
-            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], colors: "mint", "green", randomizeNumberOfPairsOfCards: true),
-        MemoryGameTheme(name: "Smileys", emojis: [
-            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🤫"], colors: "orange", "red", numberOfPairsOfCards: 8, randomizeNumberOfPairsOfCards: true),
-        MemoryGameTheme(name: "Flags", emojis: [
-            "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], colors: "yellow", numberOfPairsOfCards: 6),
-    ]
+    typealias Theme = MemoryGameTheme<String>
 
     /// An instance of the game model.
     @Published private var model: MemoryGame<String>!
     /// An instance of the current theme.
-    private var theme: MemoryGameTheme<String>!
+    private var theme: Theme!
 
     /// Returns an instance of the game model based on the given `theme`.
     private static func makeMemoryGame(_ theme: MemoryGameTheme<String>) -> MemoryGame<String> {
@@ -40,14 +24,13 @@ class EmojiMemoryGame: ObservableObject {
     }
 
     /// Creates an instance of the view model.
-    init() {
+    init(theme: Theme) {
+        self.theme = theme
         resetGame()
     }
 
     /// Starts a new game.
     func resetGame() {
-        let randomTheme = EmojiMemoryGame.themes.randomElement()!
-        theme = randomTheme
         model = EmojiMemoryGame.makeMemoryGame(theme)
     }
 
