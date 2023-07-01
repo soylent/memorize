@@ -12,7 +12,13 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable where CardContent: Co
     /// The name of the theme.
     var name: String
     /// Emojis comprising the theme.
-    var emojis: [CardContent]
+    var emojis: [CardContent] {
+        willSet {
+            if newValue.count < numberOfPairsOfCards {
+                numberOfPairsOfCards = newValue.count
+            }
+        }
+    }
     /// Colors to fill the back of each card.
     var colors: [String]
     /// The number of pairs of cards to show.
