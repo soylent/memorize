@@ -47,35 +47,33 @@ class EmojiMemoryGame: ObservableObject {
     }
 
     /// The current theme colors that are used to fill the back of each card.
-    var currentThemeColors: [Color] {
-        theme.colors.map { color in
-            var mappedColor = Color.black
-            switch color {
-            case "blue":
-                mappedColor = Color.blue
-            case "brown":
-                mappedColor = Color.brown
-            case "green":
-                mappedColor = Color.green
-            case "orange":
-                mappedColor = Color.orange
-            case "red":
-                mappedColor = Color.red
-            case "yellow":
-                mappedColor = Color.yellow
-            case "gray":
-                mappedColor = Color.gray
-            case "cyan":
-                mappedColor = Color.cyan
-            case "teal":
-                mappedColor = Color.teal
-            case "mint":
-                mappedColor = Color.mint
-            default:
-                break
-            }
-            return mappedColor
+    var currentThemeColor: Color {
+        var mappedColor = Color.black
+        switch theme.color {
+        case "blue":
+            mappedColor = Color.blue
+        case "brown":
+            mappedColor = Color.brown
+        case "green":
+            mappedColor = Color.green
+        case "orange":
+            mappedColor = Color.orange
+        case "red":
+            mappedColor = Color.red
+        case "yellow":
+            mappedColor = Color.yellow
+        case "gray":
+            mappedColor = Color.gray
+        case "cyan":
+            mappedColor = Color.cyan
+        case "teal":
+            mappedColor = Color.teal
+        case "mint":
+            mappedColor = Color.mint
+        default:
+            break
         }
+        return mappedColor
     }
 
     /// The player's score.

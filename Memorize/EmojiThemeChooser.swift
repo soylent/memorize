@@ -72,7 +72,7 @@ struct EmojiThemeChooser: View {
         }
         return HStack {
             Circle()
-                .fill(Gradient(colors: themeColors(for: theme)))
+                .fill(themeColor(for: theme))
                 .frame(width: 10)
             Text(theme.name)
             Spacer()
@@ -88,35 +88,33 @@ struct EmojiThemeChooser: View {
     }
 
     /// Returns the colors associated with the given `theme`.
-    private func themeColors(for theme: MemoryGameTheme<String>) -> [Color] {
-        theme.colors.map { color in
-            var mappedColor = Color.black
-            switch color {
-            case "blue":
-                mappedColor = Color.blue
-            case "brown":
-                mappedColor = Color.brown
-            case "green":
-                mappedColor = Color.green
-            case "orange":
-                mappedColor = Color.orange
-            case "red":
-                mappedColor = Color.red
-            case "yellow":
-                mappedColor = Color.yellow
-            case "gray":
-                mappedColor = Color.gray
-            case "cyan":
-                mappedColor = Color.cyan
-            case "teal":
-                mappedColor = Color.teal
-            case "mint":
-                mappedColor = Color.mint
-            default:
-                break
-            }
-            return mappedColor
+    private func themeColor(for theme: MemoryGameTheme<String>) -> Color {
+        var mappedColor = Color.black
+        switch theme.color {
+        case "blue":
+            mappedColor = Color.blue
+        case "brown":
+            mappedColor = Color.brown
+        case "green":
+            mappedColor = Color.green
+        case "orange":
+            mappedColor = Color.orange
+        case "red":
+            mappedColor = Color.red
+        case "yellow":
+            mappedColor = Color.yellow
+        case "gray":
+            mappedColor = Color.gray
+        case "cyan":
+            mappedColor = Color.cyan
+        case "teal":
+            mappedColor = Color.teal
+        case "mint":
+            mappedColor = Color.mint
+        default:
+            break
         }
+        return mappedColor
     }
 }
 

@@ -20,7 +20,7 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
         }
     }
     /// Colors to fill the back of each card.
-    var colors: [String]
+    var color: String
     /// The number of pairs of cards to show.
     var numberOfPairsOfCards: Int
     /// Unique theme identifier.
@@ -34,16 +34,12 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
     /// - Parameter numberOfPairsOfCards: the number of pairs of cards to show. Defaults to the number of emojis.
     /// - Parameter randomizeNumberOfPairsOfCards: if true, `numberOfPairsOfCards` is set to a random
     ///   number between 1 and `numberOfPairsOfCards`.
-    fileprivate init(name: String, emojis: [CardContent], colors: String..., id: Int, numberOfPairsOfCards: Int? = nil, randomizeNumberOfPairsOfCards: Bool = false) {
+    fileprivate init(name: String, emojis: [CardContent], color: String, id: Int, numberOfPairsOfCards: Int? = nil) {
         self.name = name
         self.emojis = emojis
-        self.colors = colors
+        self.color = color
         self.id = id
-        var clampedNumberOfPairsOfCards = min(max(1, numberOfPairsOfCards ?? emojis.count), emojis.count)
-        if randomizeNumberOfPairsOfCards {
-            clampedNumberOfPairsOfCards = Int.random(in: 1 ... clampedNumberOfPairsOfCards)
-        }
-        self.numberOfPairsOfCards = clampedNumberOfPairsOfCards
+        self.numberOfPairsOfCards = min(max(1, numberOfPairsOfCards ?? emojis.count), emojis.count)
     }
 
     mutating func removeEmoji(_ emoji: CardContent) {
@@ -57,7 +53,7 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
     }
 
     mutating func setColor(_ color: String) {
-        colors = [color]
+        self.color = color
     }
 }
 
@@ -91,7 +87,7 @@ class EmojiThemeStore: ObservableObject {
         appendTheme(name: "Vehicles", emojis: [
             "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🚚", "🚛", "🚜", "🚲", "🛵", "🚁"], color: "teal")
         appendTheme(name: "Sports", emojis: [
-            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], color: "purple")
+            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], color: "orange")
         appendTheme(name: "Smileys", emojis: [
             "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🤫"], color: "blue", numberOfPairsOfCards: 8)
         appendTheme(name: "Flags", emojis: [
@@ -101,7 +97,7 @@ class EmojiThemeStore: ObservableObject {
     @discardableResult
     func appendTheme(name: String = "", emojis: [String] = [], color: String = "blue", numberOfPairsOfCards: Int = 6) -> MemoryGameTheme<String> {
         idCounter += 1
-        let newTheme = MemoryGameTheme(name: name, emojis: emojis, colors: color, id: idCounter, numberOfPairsOfCards: numberOfPairsOfCards)
+        let newTheme = MemoryGameTheme(name: name, emojis: emojis, color: color, id: idCounter, numberOfPairsOfCards: numberOfPairsOfCards)
         themes.append(newTheme)
         return newTheme
     }

@@ -61,7 +61,7 @@ struct EmojiMemoryGameView: View {
     private var cardGrid: some View {
         AspectVGrid(items: game.cards, aspectRatio: CardConstants.aspectRatio) { card in
             if isDealt(card), card.isFaceUp || !card.isMatched {
-                CardView(card: card, colors: game.currentThemeColors)
+                CardView(card: card, color: game.currentThemeColor)
                     .zIndex(zIndex(for: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .padding(CardConstants.padding)
@@ -80,14 +80,14 @@ struct EmojiMemoryGameView: View {
     private var deckBody: some View {
         ZStack {
             ForEach(undealtCards) { card in
-                CardView(card: card, colors: game.currentThemeColors)
+                CardView(card: card, color: game.currentThemeColor)
                     .zIndex(zIndex(for: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
                     .transition(.asymmetric(insertion: .opacity, removal: .identity))
             }
         }
         .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
-        .foregroundColor(game.currentThemeColors.first!)
+        .foregroundColor(game.currentThemeColor)
         .onTapGesture {
             dealCards()
         }
@@ -109,10 +109,11 @@ struct EmojiMemoryGameView: View {
                     game.shuffle()
                 }
             } label: {
-                Image(systemName: "die.face.5")
+                Image(systemName: "shuffle.circle")
             }
         }
-        .font(.largeTitle)
+        .font(.title)
+        .padding()
     }
 
     private enum CardConstants {
@@ -129,8 +130,8 @@ struct EmojiMemoryGameView: View {
 struct CardView: View {
     /// The card model.
     let card: EmojiMemoryGame.Card
-    /// Colors to fill the back of the card.
-    let colors: [Color]
+    /// The color to fill the back of the card.
+    let color: Color
 
     @State private var animatedBonusRemaining = 0.0
 
@@ -161,7 +162,7 @@ struct CardView: View {
                     .font(Font.system(size: DrawingConstants.fontSize))
                     .scaleEffect(scale(thatFits: geometry.size))
             }
-            .cardify(isFaceUp: card.isFaceUp, colors: colors)
+            .cardify(isFaceUp: card.isFaceUp, color: color)
         }
     }
 

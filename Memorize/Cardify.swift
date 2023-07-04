@@ -11,17 +11,17 @@ import SwiftUI
 struct Cardify: Animatable, ViewModifier {
     /// Rotation angle of the card in degrees.
     var rotation: Double
-    /// Colors to fill the back of the card.
-    var colors: [Color]
+    /// The color to fill the back of the card.
+    var color: Color
     /// Animatable property which is an alias for rotation.
     var animatableData: Double {
         get { rotation }
         set { rotation = newValue }
     }
 
-    init(isFaceUp: Bool, colors: [Color]) {
+    init(isFaceUp: Bool, color: Color) {
         rotation = isFaceUp ? 0 : 180
-        self.colors = colors
+        self.color = color
     }
 
     /// Returns the body of the modified view.
@@ -32,7 +32,7 @@ struct Cardify: Animatable, ViewModifier {
                 shape.fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: DrawingConstants.lineWidth)
             } else {
-                shape.fill(Gradient(colors: colors))
+                shape.fill(color)
             }
             content.opacity(rotation < 90 ? 1 : 0)
         }
@@ -48,7 +48,7 @@ struct Cardify: Animatable, ViewModifier {
 
 extension View {
     /// Returns a view that looks card-like view with the contents of the original view shown on its face.
-    func cardify(isFaceUp: Bool, colors: [Color]) -> some View {
-        modifier(Cardify(isFaceUp: isFaceUp, colors: colors))
+    func cardify(isFaceUp: Bool, color: Color) -> some View {
+        modifier(Cardify(isFaceUp: isFaceUp, color: color))
     }
 }
