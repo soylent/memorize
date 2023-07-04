@@ -25,15 +25,21 @@ class EmojiThemeStore: ObservableObject {
             "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], colors: "yellow", numberOfPairsOfCards: 6),
     ]
 
-    @Published var themes: [MemoryGameTheme<String>]
+    @Published var themes: [MemoryGameTheme<String>] {
+        didSet {
+            scheduleAutosave()
+        }
+    }
+
+    private var autosaveTimer: Timer?
 
     init() {
-        if let themeData = UserDefaults.standard.data(forKey: "memorize.themes"),
+        if let themeData = UserDefaults.standard.data(forKey: AutosaveConstants.storeKey),
            let loadedThemes = try? JSONDecoder().decode([MemoryGameTheme<String>].self, from: themeData) {
             themes = loadedThemes
-            print("Loaded \(loadedThemes.count) from UserDefaults")
+            print("[~] Loaded \(loadedThemes.count) themes from UserDefaults.")
         } else {
-            themes = Self.themes
+            themes = Self.defaultThemes
         }
     }
 
@@ -41,5 +47,24 @@ class EmojiThemeStore: ObservableObject {
         let newTheme = MemoryGameTheme(name: name, emojis: emojis, colors: color, numberOfPairsOfCards: numberOfPairsOfCards)
         themes.append(newTheme)
         return newTheme
+    }
+
+    private func scheduleAutosave() {
+        autosaveTimer?.invalidate()
+        autosaveTimer = Timer.scheduledTimer(withTimeInterval: AutosaveConstants.coalescingInterval, repeats: false) { _ in
+            self.save()
+        }
+    }
+
+    private func save() {
+        if let themeData = try? JSONEncoder().encode(themes) {
+            UserDefaults.standard.set(themeData, forKey: AutosaveConstants.storeKey)
+            print("[~] Autosaved \(themes.count) themes to UserDefaults.")
+        }
+    }
+
+    private enum AutosaveConstants {
+        static let storeKey = "memorize.themes"
+        static let coalescingInterval = 5.0
     }
 }
