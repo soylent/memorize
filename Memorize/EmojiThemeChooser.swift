@@ -76,6 +76,7 @@ struct EmojiThemeChooser: View {
                 .frame(width: 10)
             Text(theme.name)
             Spacer()
+            Text("\(theme.numberOfPairsOfCards)/\(theme.emojis.count)").padding(.horizontal)
             let emojiPreviewCount = min(3, theme.emojis.count)
             Text(theme.emojis[..<emojiPreviewCount].joined())
         }
