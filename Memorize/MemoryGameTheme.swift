@@ -8,7 +8,7 @@
 import Foundation
 
 /// A model that represents a card theme.
-struct MemoryGameTheme<CardContent>: Codable, Identifiable where CardContent: Codable, CardContent: Equatable {
+struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where CardContent: Codable, CardContent: Equatable {
     /// The name of the theme.
     var name: String
     /// Emojis comprising the theme.

@@ -25,13 +25,15 @@ class EmojiMemoryGame: ObservableObject {
 
     /// Creates an instance of the view model.
     init(theme: Theme) {
-        self.theme = theme
-        resetGame()
+        resetGame(usingTheme: theme)
     }
 
-    /// Starts a new game.
-    func resetGame() {
-        model = EmojiMemoryGame.makeMemoryGame(theme)
+    /// Starts a new game using the given `theme`.
+    func resetGame(usingTheme theme: MemoryGameTheme<String>? = nil) {
+        if let theme {
+            self.theme = theme
+        }
+        model = EmojiMemoryGame.makeMemoryGame(theme ?? self.theme)
     }
 
     /// All available cards.
