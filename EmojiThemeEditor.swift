@@ -60,7 +60,7 @@ struct EmojiThemeEditor: View {
 
     private var cardCountSection: some View {
         Section(header: Text("Card Count")) {
-            Stepper(value: $theme.numberOfPairsOfCards, in: 0...theme.emojis.count) {
+            Stepper(value: $theme.numberOfPairsOfCards, in: theme.currentMinNumberOfPairsOfCards...theme.emojis.count) {
                 Text("\(theme.numberOfPairsOfCards) Pairs")
             }
         }

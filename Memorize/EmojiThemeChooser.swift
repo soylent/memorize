@@ -13,6 +13,7 @@ struct EmojiThemeChooser: View {
     @State private var games: [Int: EmojiMemoryGame]
     @State private var editMode: EditMode = .inactive
     @State private var themeToEdit: MemoryGameTheme<String>?
+    @State private var themeToAdd: MemoryGameTheme<String>?
 
     init(themeStore: EmojiThemeStore) {
         self.themeStore = themeStore
@@ -48,21 +49,34 @@ struct EmojiThemeChooser: View {
                 .navigationTitle("Memorize")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    EditButton()
+                    ToolbarItem { EditButton() }
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button {
+                            themeToAdd = themeStore.newTheme()
+                        } label: {
+                            Image(systemName: "plus.circle")
+                        }
+                    }
                 }
                 .environment(\.editMode, $editMode)
-            }
-            HStack {
-                Button {
-                    let newTheme = themeStore.appendTheme()
-                    games[newTheme.id] = EmojiMemoryGame(theme: newTheme)
-                    themeToEdit = newTheme
-                } label: {
-                    Image(systemName: "plus.circle")
+                .sheet(item: $themeToAdd) { theme in
+                    let themeBinding = Binding(get: { theme }, set: { themeToAdd = $0 })
+                    EmojiThemeEditor(theme: themeBinding)
+                        .onDisappear {
+                            if theme.isValid {
+                                games[theme.id] = EmojiMemoryGame(theme: theme)
+                                withAnimation {
+                                    themeStore.themes.append(theme)
+                                }
+                            }
+                        }
+                }
+                .sheet(item: $themeToEdit) { theme in
+                    if let themeIndex = themeStore.themes.firstIndex { $0.id == theme.id } {
+                        EmojiThemeEditor(theme: $themeStore.themes[themeIndex])
+                    }
                 }
             }
-            .font(.title)
-            .padding()
         }
     }
 
@@ -78,13 +92,7 @@ struct EmojiThemeChooser: View {
             Spacer()
             Text("\(theme.numberOfPairsOfCards)/\(theme.emojis.count)")
             Divider()
-            let emojiPreviewCount = min(3, theme.emojis.count)
-            Text(theme.emojis[..<emojiPreviewCount].joined())
-        }
-        .sheet(item: $themeToEdit) { theme in
-            if let themeIndex = themeStore.themes.firstIndex { $0.id == theme.id } {
-                EmojiThemeEditor(theme: $themeStore.themes[themeIndex])
-            }
+            Text(theme.emojis[..<theme.currentMinNumberOfPairsOfCards].joined())
         }
         .gesture(editMode == .active ? tapToEdit : nil)
     }

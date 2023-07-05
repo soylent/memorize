@@ -13,9 +13,9 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
     var name: String
     /// Emojis comprising the theme.
     var emojis: [CardContent] {
-        willSet {
-            if newValue.count < numberOfPairsOfCards {
-                numberOfPairsOfCards = newValue.count
+        didSet {
+            if emojis.count <= minNumberOfPairsOfCards || emojis.count < numberOfPairsOfCards {
+                numberOfPairsOfCards = emojis.count
             }
         }
     }
@@ -25,6 +25,9 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
     var numberOfPairsOfCards: Int
     /// Unique theme identifier.
     let id: Int
+    /// The minimum number of pairs of cards.
+    var minNumberOfPairsOfCards: Int { 2 }
+    var currentMinNumberOfPairsOfCards: Int { min(2, emojis.count) }
 
     /// Creates an instance of a theme.
     ///
@@ -40,8 +43,14 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
         self.numberOfPairsOfCards = min(max(1, numberOfPairsOfCards ?? emojis.count), emojis.count)
     }
 
+    var isValid: Bool {
+        !name.isEmpty && emojis.count >= minNumberOfPairsOfCards
+    }
+
     mutating func removeEmoji(_ emoji: CardContent) {
-        emojis.removeAll { $0 == emoji }
+        if emojis.count > minNumberOfPairsOfCards {
+            emojis.removeAll { $0 == emoji }
+        }
     }
 
     mutating func addEmojis(_ emojis: [CardContent]) {
@@ -79,25 +88,26 @@ class EmojiThemeStore: ObservableObject {
     private func loadDefaultThemes() {
         appendTheme(name: "Animals", emojis: [
             "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗", "🐨",
-        ], color: .greenColor, numberOfPairsOfCards: 7)
+        ], color: .greenColor, numberOfPairsOfCards: 10)
         appendTheme(name: "Food", emojis: [
-            "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], color: .redColor, numberOfPairsOfCards: 5)
+            "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], color: .redColor, numberOfPairsOfCards: 8)
         appendTheme(name: "Vehicles", emojis: [
-            "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🚚", "🚛", "🚜", "🚲", "🛵", "🚁"], color: .blueColor)
+            "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🚚", "🚛", "🚜", "🚲", "🛵", "🚁"], color: .blueColor, numberOfPairsOfCards: 7)
         appendTheme(name: "Sports", emojis: [
-            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], color: .mintColor)
+            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], color: .mintColor, numberOfPairsOfCards: 6)
         appendTheme(name: "Smileys", emojis: [
-            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🤫"], color: .orangeColor, numberOfPairsOfCards: 8)
+            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🤫"], color: .orangeColor, numberOfPairsOfCards: 4)
         appendTheme(name: "Flags", emojis: [
-            "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], color: .tealColor, numberOfPairsOfCards: 6)
+            "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], color: .tealColor, numberOfPairsOfCards: 5)
     }
 
-    @discardableResult
-    func appendTheme(name: String = "", emojis: [String] = [], color: RGBAColor = .blueColor, numberOfPairsOfCards: Int = 6) -> MemoryGameTheme<String> {
+    func newTheme(name: String = "", emojis: [String] = [], color: RGBAColor = .blueColor, numberOfPairsOfCards: Int = 0) -> MemoryGameTheme<String> {
         idCounter += 1
-        let newTheme = MemoryGameTheme(name: name, emojis: emojis, color: color, id: idCounter, numberOfPairsOfCards: numberOfPairsOfCards)
-        themes.append(newTheme)
-        return newTheme
+        return MemoryGameTheme(name: name, emojis: emojis, color: color, id: idCounter, numberOfPairsOfCards: numberOfPairsOfCards)
+    }
+
+    private func appendTheme(name: String, emojis: [String], color: RGBAColor, numberOfPairsOfCards: Int) {
+        themes.append(newTheme(name: name, emojis: emojis, color: color, numberOfPairsOfCards: numberOfPairsOfCards))
     }
 
     private func scheduleAutosave() {
