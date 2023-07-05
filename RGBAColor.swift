@@ -18,6 +18,10 @@ extension Color {
     init(rgbaColor rgba: RGBAColor) {
         self.init(.sRGB, red: rgba.red, green: rgba.green, blue: rgba.blue, opacity: rgba.alpha)
     }
+
+    static func == (left: Color, right: RGBAColor) -> Bool {
+        RGBAColor(color: left) == right
+    }
 }
 
 extension RGBAColor {
@@ -26,9 +30,25 @@ extension RGBAColor {
         var green: CGFloat = 0
         var blue: CGFloat = 0
         var alpha: CGFloat = 0
-        if let cgColor = color.cgColor {
-            UIColor(cgColor: cgColor).getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-        }
+        UIColor(color).getRed(&red, green: &green, blue: &blue, alpha: &alpha)
         self.init(red: Double(red), green: Double(green), blue: Double(blue), alpha: Double(alpha))
+    }
+
+    static var redColor: RGBAColor { Self(color: Color.red) }
+    static var blueColor: RGBAColor { Self(color: Color.blue) }
+    static var greenColor: RGBAColor { Self(color: Color.green) }
+    static var mintColor: RGBAColor { Self(color: Color.mint) }
+    static var tealColor: RGBAColor { Self(color: Color.teal) }
+    static var orangeColor: RGBAColor { Self(color: Color.orange) }
+}
+
+extension MemoryGameTheme {
+    var color: Color {
+        get {
+            Color(rgbaColor: rgbaColor)
+        }
+        set {
+            rgbaColor = RGBAColor(color: newValue)
+        }
     }
 }

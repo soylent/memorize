@@ -75,11 +75,11 @@ struct EmojiThemeEditor: View {
                         .frame(width: 30, height: 30)
                         .overlay(
                             Image(systemName: "checkmark").foregroundColor(.white)
-                                .opacity(color.description == theme.color ? 1 : 0)
+                                .opacity(color == theme.rgbaColor ? 1 : 0)
                         )
                         .onTapGesture {
                             withAnimation {
-                                theme.setColor(color.description)
+                                theme.setColor(RGBAColor(color: color))
                             }
                         }
                 }

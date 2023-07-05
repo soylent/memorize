@@ -20,7 +20,7 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
         }
     }
     /// Colors to fill the back of each card.
-    var color: String
+    var rgbaColor: RGBAColor
     /// The number of pairs of cards to show.
     var numberOfPairsOfCards: Int
     /// Unique theme identifier.
@@ -30,14 +30,12 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
     ///
     /// - Parameter name: the name of the theme.
     /// - Parameter emojis: emojis comprising the theme.
-    /// - Parameter colors: colors to fill the back of each card.
+    /// - Parameter color: the color to fill the back of each card.
     /// - Parameter numberOfPairsOfCards: the number of pairs of cards to show. Defaults to the number of emojis.
-    /// - Parameter randomizeNumberOfPairsOfCards: if true, `numberOfPairsOfCards` is set to a random
-    ///   number between 1 and `numberOfPairsOfCards`.
-    fileprivate init(name: String, emojis: [CardContent], color: String, id: Int, numberOfPairsOfCards: Int? = nil) {
+    fileprivate init(name: String, emojis: [CardContent], color: RGBAColor, id: Int, numberOfPairsOfCards: Int? = nil) {
         self.name = name
         self.emojis = emojis
-        self.color = color
+        self.rgbaColor = color
         self.id = id
         self.numberOfPairsOfCards = min(max(1, numberOfPairsOfCards ?? emojis.count), emojis.count)
     }
@@ -52,8 +50,8 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
         }
     }
 
-    mutating func setColor(_ color: String) {
-        self.color = color
+    mutating func setColor(_ color: RGBAColor) {
+        self.rgbaColor = color
     }
 }
 
@@ -81,21 +79,21 @@ class EmojiThemeStore: ObservableObject {
     private func loadDefaultThemes() {
         appendTheme(name: "Animals", emojis: [
             "🐡", "🐧", "🦉", "🐥", "🦆", "🙊", "🐷", "🦊", "🐻", "🐝", "🐴", "🐢", "🐙", "🐻‍❄️", "🐗", "🐨",
-        ], color: "green", numberOfPairsOfCards: 7)
+        ], color: .greenColor, numberOfPairsOfCards: 7)
         appendTheme(name: "Food", emojis: [
-            "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], color: "red", numberOfPairsOfCards: 5)
+            "🍎", "🍐", "🥑", "🍋", "🥭", "🌽", "🫐", "🥒", "🍌", "🍉", "🍇", "🥕", "🫑", "🥝", "🫒", "🌭"], color: .redColor, numberOfPairsOfCards: 5)
         appendTheme(name: "Vehicles", emojis: [
-            "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🚚", "🚛", "🚜", "🚲", "🛵", "🚁"], color: "teal")
+            "🚗", "🚌", "🏎", "🚓", "🚑", "🚒", "🚚", "🚛", "🚜", "🚲", "🛵", "🚁"], color: .blueColor)
         appendTheme(name: "Sports", emojis: [
-            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], color: "orange")
+            "⚽️", "🏀", "🏈", "⚾️", "🥎", "🏐", "🏉", "🥏", "🎱", "🏓", "🏸", "⛳️", "🪃", "🥊", "⛸", "🛷"], color: .mintColor)
         appendTheme(name: "Smileys", emojis: [
-            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🤫"], color: "blue", numberOfPairsOfCards: 8)
+            "😀", "😁", "🥹", "😇", "🥳", "😜", "🤩", "🥸", "😐", "😬", "😓", "🙄", "🤔", "😱", "🧐", "🤫"], color: .orangeColor, numberOfPairsOfCards: 8)
         appendTheme(name: "Flags", emojis: [
-            "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], color: "mint", numberOfPairsOfCards: 6)
+            "🇦🇷", "🇦🇲", "🇧🇭", "🇨🇲", "🇨🇫", "🇨🇦", "🇦🇴", "🇪🇺", "🇮🇸", "🇯🇵", "🇱🇹", "🇳🇬", "🇰🇷", "🇨🇭", "🇹🇷", "🇫🇮"], color: .tealColor, numberOfPairsOfCards: 6)
     }
 
     @discardableResult
-    func appendTheme(name: String = "", emojis: [String] = [], color: String = "blue", numberOfPairsOfCards: Int = 6) -> MemoryGameTheme<String> {
+    func appendTheme(name: String = "", emojis: [String] = [], color: RGBAColor = .blueColor, numberOfPairsOfCards: Int = 6) -> MemoryGameTheme<String> {
         idCounter += 1
         let newTheme = MemoryGameTheme(name: name, emojis: emojis, color: color, id: idCounter, numberOfPairsOfCards: numberOfPairsOfCards)
         themes.append(newTheme)

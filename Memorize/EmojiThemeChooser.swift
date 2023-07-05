@@ -72,11 +72,12 @@ struct EmojiThemeChooser: View {
         }
         return HStack {
             Circle()
-                .fill(themeColor(for: theme))
+                .fill(theme.color)
                 .frame(width: 10)
             Text(theme.name)
             Spacer()
-            Text("\(theme.numberOfPairsOfCards)/\(theme.emojis.count)").padding(.horizontal)
+            Text("\(theme.numberOfPairsOfCards)/\(theme.emojis.count)")
+            Divider()
             let emojiPreviewCount = min(3, theme.emojis.count)
             Text(theme.emojis[..<emojiPreviewCount].joined())
         }
@@ -86,36 +87,6 @@ struct EmojiThemeChooser: View {
             }
         }
         .gesture(editMode == .active ? tapToEdit : nil)
-    }
-
-    /// Returns the colors associated with the given `theme`.
-    private func themeColor(for theme: MemoryGameTheme<String>) -> Color {
-        var mappedColor = Color.black
-        switch theme.color {
-        case "blue":
-            mappedColor = Color.blue
-        case "brown":
-            mappedColor = Color.brown
-        case "green":
-            mappedColor = Color.green
-        case "orange":
-            mappedColor = Color.orange
-        case "red":
-            mappedColor = Color.red
-        case "yellow":
-            mappedColor = Color.yellow
-        case "gray":
-            mappedColor = Color.gray
-        case "cyan":
-            mappedColor = Color.cyan
-        case "teal":
-            mappedColor = Color.teal
-        case "mint":
-            mappedColor = Color.mint
-        default:
-            break
-        }
-        return mappedColor
     }
 }
 
