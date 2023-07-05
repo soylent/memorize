@@ -18,10 +18,6 @@ extension Color {
     init(rgbaColor rgba: RGBAColor) {
         self.init(.sRGB, red: rgba.red, green: rgba.green, blue: rgba.blue, opacity: rgba.alpha)
     }
-
-    static func == (left: Color, right: RGBAColor) -> Bool {
-        RGBAColor(color: left) == right
-    }
 }
 
 extension RGBAColor {

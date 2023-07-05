@@ -68,22 +68,7 @@ struct EmojiThemeEditor: View {
 
     private var colorSection: some View {
         Section(header: Text("Color")) {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 30))]) {
-                ForEach(availableColors, id: \.self) { color in
-                    RoundedRectangle(cornerRadius: 4)
-                        .fill(color)
-                        .frame(width: 30, height: 30)
-                        .overlay(
-                            Image(systemName: "checkmark").foregroundColor(.white)
-                                .opacity(color == theme.rgbaColor ? 1 : 0)
-                        )
-                        .onTapGesture {
-                            withAnimation {
-                                theme.setColor(RGBAColor(color: color))
-                            }
-                        }
-                }
-            }
+            ColorPicker("Back color", selection: $theme.color)
         }
     }
 }
