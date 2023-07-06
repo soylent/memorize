@@ -11,14 +11,18 @@ import SwiftUI
 struct Cardify: Animatable, ViewModifier {
     /// Rotation angle of the card in degrees.
     var rotation: Double
+
     /// The color to fill the back of the card.
     var color: Color
-    /// Animatable property which is an alias for rotation.
+
+    /// Animatable property, that is also an alias for rotation.
     var animatableData: Double {
         get { rotation }
         set { rotation = newValue }
     }
 
+    /// Creates a new instance that initially displays the `content` if `isFaceUp` is true, and
+    /// otherwise shows the back fill with the given `color`.
     init(isFaceUp: Bool, color: Color) {
         rotation = isFaceUp ? 0 : 180
         self.color = color
@@ -29,7 +33,7 @@ struct Cardify: Animatable, ViewModifier {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadius)
             if rotation < 90 {
-                shape.fill().foregroundColor(.white)
+                shape.fill(.clear)
                 shape.strokeBorder(lineWidth: DrawingConstants.lineWidth)
             } else {
                 shape.fill(color)

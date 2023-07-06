@@ -7,14 +7,24 @@
 
 import SwiftUI
 
+/// A view that shows a list of all available emoji themes.
 struct EmojiThemeChooser: View {
+    /// A reference to the theme store.
     @ObservedObject var themeStore: EmojiThemeStore
 
+    /// A dictionary that maps the theme id to the corresponding game instance.
     @State private var games: [Int: EmojiMemoryGame]
+
+    /// Whether the list is editable.
     @State private var editMode: EditMode = .inactive
+
+    /// The theme that is being edited.
     @State private var themeToEdit: MemoryGameTheme<String>?
+
+    /// The theme that is being added.
     @State private var themeToAdd: MemoryGameTheme<String>?
 
+    /// Creates a new instance of the view for the given `themeStore`.
     init(themeStore: EmojiThemeStore) {
         self.themeStore = themeStore
         var games = [Int: EmojiMemoryGame]()
@@ -24,6 +34,7 @@ struct EmojiThemeChooser: View {
         _games = .init(initialValue: games)
     }
 
+    /// The view body.
     var body: some View {
         VStack(alignment: .trailing) {
             NavigationView {
@@ -81,6 +92,7 @@ struct EmojiThemeChooser: View {
         }
     }
 
+    /// Returns the label for the given `theme`.
     private func label(for theme: MemoryGameTheme<String>) -> some View {
         let tapToEdit = TapGesture().onEnded {
             themeToEdit = theme
@@ -88,7 +100,7 @@ struct EmojiThemeChooser: View {
         return HStack {
             Circle()
                 .fill(theme.color)
-                .frame(width: 10)
+                .frame(width: DrawingConstants.colorCircleSize)
             Text(theme.name)
             Spacer()
             Text("\(theme.numberOfPairsOfCards)/\(theme.emojis.count)")
@@ -96,6 +108,11 @@ struct EmojiThemeChooser: View {
             Text(theme.emojis[..<theme.currentMinNumberOfPairsOfCards].joined())
         }
         .gesture(editMode == .active ? tapToEdit : nil)
+    }
+
+    /// Constants that determine the view appearance.
+    private enum DrawingConstants {
+        static let colorCircleSize: CGFloat = 10
     }
 }
 

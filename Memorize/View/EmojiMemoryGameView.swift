@@ -12,8 +12,10 @@ struct EmojiMemoryGameView: View {
     /// A reference to the view model.
     @ObservedObject var game: EmojiMemoryGame
 
+    /// Namespace for card ids.
     @Namespace private var dealingNamespace
 
+    /// Deal all cards with animation.
     private func dealCards() {
         for card in game.cards {
             withAnimation(dealAnimation(for: card)) {
@@ -22,14 +24,16 @@ struct EmojiMemoryGameView: View {
         }
     }
 
+    /// Returns a deal animation for the given `card`.
     private func dealAnimation(for card: EmojiMemoryGame.Card) -> Animation {
         var delay = 0.0
         if let cardIndex = game.cardIndex(for: card) {
-            delay = Double(cardIndex) * (CardConstants.totalDealDuration / Double(game.cards.count))
+            delay = Double(cardIndex) * (DrawingConstants.totalDealDuration / Double(game.cards.count))
         }
-        return Animation.easeInOut(duration: CardConstants.dealDuration).delay(delay)
+        return Animation.easeInOut(duration: DrawingConstants.dealDuration).delay(delay)
     }
 
+    /// Returns the z index value for the given `card`.
     private func zIndex(for card: EmojiMemoryGame.Card) -> Double {
         -Double(game.cardIndex(for: card) ?? 0)
     }
@@ -49,13 +53,14 @@ struct EmojiMemoryGameView: View {
         .padding(.horizontal)
     }
 
+    /// Returns a grid of cards.
     private var cardGrid: some View {
-        AspectVGrid(items: game.cards, aspectRatio: CardConstants.aspectRatio) { card in
+        AspectVGrid(items: game.cards, aspectRatio: DrawingConstants.aspectRatio) { card in
             if game.isDealt(card), card.isFaceUp || !card.isMatched {
                 CardView(card: card, color: game.currentThemeColor)
                     .zIndex(zIndex(for: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
-                    .padding(CardConstants.padding)
+                    .padding(DrawingConstants.padding)
                     .transition(.asymmetric(insertion: .identity, removal: .scale))
                     .onTapGesture {
                         withAnimation {
@@ -68,6 +73,7 @@ struct EmojiMemoryGameView: View {
         }
     }
 
+    /// Returns a view representing a deck of cards.
     private var deckBody: some View {
         ZStack {
             ForEach(game.undealtCards) { card in
@@ -77,13 +83,14 @@ struct EmojiMemoryGameView: View {
                     .transition(.asymmetric(insertion: .opacity, removal: .identity))
             }
         }
-        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
+        .frame(width: DrawingConstants.undealtWidth, height: DrawingConstants.undealtHeight)
         .foregroundColor(game.currentThemeColor)
         .onTapGesture {
             dealCards()
         }
     }
 
+    /// Returns the menu at the bottom.
     private var bottomMenu: some View {
         HStack {
             Button {
@@ -106,7 +113,8 @@ struct EmojiMemoryGameView: View {
         .padding()
     }
 
-    private enum CardConstants {
+    /// Constants that determine the view appearance.
+    private enum DrawingConstants {
         static let aspectRatio: CGFloat = 5 / 9
         static let dealDuration: Double = 0.5
         static let padding: CGFloat = 4
@@ -123,6 +131,7 @@ struct CardView: View {
     /// The color to fill the back of the card.
     let color: Color
 
+    /// The fraction of remaining bonus time.
     @State private var animatedBonusRemaining = 0.0
 
     /// The body of the view.
@@ -161,10 +170,8 @@ struct CardView: View {
         min(size.width, size.height) * DrawingConstants.fontScale / DrawingConstants.fontSize
     }
 
-    /// Constants that determine card appearance.
+    /// Constants that determine the card appearance.
     private enum DrawingConstants {
-        static let cornerRadius: CGFloat = 12
-        static let lineWidth: CGFloat = 1
         static let fontScale: CGFloat = 0.7
         static let fontSize: CGFloat = 32
         static let piePadding: CGFloat = 5

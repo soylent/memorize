@@ -14,7 +14,10 @@ class EmojiMemoryGame: ObservableObject {
 
     /// An instance of the game model.
     @Published private var model: MemoryGame<String>!
+
+    /// The set of the dealt cards.
     @Published private var dealt = Set<Int>()
+
     /// An instance of the current theme.
     private var theme: Theme!
 
@@ -53,21 +56,23 @@ class EmojiMemoryGame: ObservableObject {
         model.currentScore
     }
 
+    /// Returns the index of the given `card` in the deck.
     func cardIndex(for card: Card) -> Int? {
         model.cardIndex(for: card)
     }
 
+    /// A list of all cards that haven't been dealt yet.
     var undealtCards: [EmojiMemoryGame.Card] { cards.filter { !isDealt($0) } }
 
+    /// Deals the given `card`.
     func dealCard(_ card: EmojiMemoryGame.Card) {
         dealt.insert(card.id)
     }
 
+    /// Returns true if the given `card` has been dealt.
     func isDealt(_ card: EmojiMemoryGame.Card) -> Bool {
         dealt.contains(card.id)
     }
-
-    // MARK: - Intent(s)
 
     /// Chooses the given `card` and updates the game accordingly.
     func choose(_ card: Card) {

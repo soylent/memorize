@@ -9,8 +9,13 @@ import SwiftUI
 
 /// Circle with a cut starting at `startAngle` and ending at `endAngle`.
 struct Pie: Shape {
+    /// The start angle of the cut.
     var startAngle: Angle
+
+    /// The end angle of the cut.
     var endAngle: Angle
+
+    /// The cut direction.
     var clockwise = true
 
     var animatableData: AnimatablePair<Double, Double> {

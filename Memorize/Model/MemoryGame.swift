@@ -11,12 +11,16 @@ import Foundation
 struct MemoryGame<CardContent> where CardContent: Equatable {
     /// All available cards.
     private(set) var cards: [Card]
+
     /// The time of the last successful card match.
     private var timeOfLastMatch: Date = .init()
+
     /// Player's score.
     private(set) var currentScore = 0
+
     /// Indices of the cards that the player has already seen.
     private var seenCardIndices = Set<Int>()
+
     /// The index of the one card that is face up.
     private var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get { cards.indices.filter { cards[$0].isFaceUp }.oneAndOnly }
@@ -28,7 +32,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         max(10 + Int(timeOfLastMatch.timeIntervalSinceNow), 1) * 2
     }
 
-    /// The number of points for a mismatch.
+    /// The number of points awarded in case of a mismatch.
     private let mismatchPoints = -1
 
     /// Creates an instance of the game by calling the `createCardContent` closure `numberOfPairsOfCards`
@@ -47,6 +51,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
         shuffle()
     }
 
+    /// Returns the index of the given `card` in the deck.
     func cardIndex(for card: Card) -> Int? {
         cards.firstIndex { $0.id == card.id }
     }
@@ -102,13 +107,16 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
 
         /// The face of the card.
         let content: CardContent
+
         /// A unique card identifier.
         let id: Int
 
         /// The time limit to get a bonus.
         let bonusTimeLimit: TimeInterval = 6
+
         /// The last time this card was turned face up and is still face up.
         var lastFaceUpDate: Date?
+
         /// The accumated time this card has been face up in the past.
         var pastFaceUpTime: TimeInterval = 0
 
