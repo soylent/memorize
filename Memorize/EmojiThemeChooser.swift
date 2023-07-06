@@ -31,6 +31,7 @@ struct EmojiThemeChooser: View {
                     ForEach(themeStore.themes) { theme in
                         NavigationLink {
                             EmojiMemoryGameView(game: games[theme.id]!)
+                                .navigationTitle(theme.name)
                         } label: { label(for: theme) }
                             .onChange(of: theme) { theme in
                                 games[theme.id]?.resetGame(usingTheme: theme)

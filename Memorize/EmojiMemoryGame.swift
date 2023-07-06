@@ -43,11 +43,6 @@ class EmojiMemoryGame: ObservableObject {
         model.cards
     }
 
-    /// The currently selected theme.
-    var currentThemeName: String {
-        theme.name
-    }
-
     /// The current theme colors that are used to fill the back of each card.
     var currentThemeColor: Color {
         theme.color

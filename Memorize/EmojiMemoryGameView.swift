@@ -39,7 +39,6 @@ struct EmojiMemoryGameView: View {
         VStack {
             ZStack(alignment: .bottom) {
                 VStack {
-                    Text(game.currentThemeName).font(.largeTitle)
                     Text("Score: \(game.currentScore)")
                     cardGrid
                 }
