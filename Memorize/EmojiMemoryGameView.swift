@@ -12,22 +12,14 @@ struct EmojiMemoryGameView: View {
     /// A reference to the view model.
     @ObservedObject var game: EmojiMemoryGame
 
-    @State private var dealt = Set<Int>()
-
     @Namespace private var dealingNamespace
-
-    private var undealtCards: [EmojiMemoryGame.Card] { game.cards.filter { !isDealt($0) } }
 
     private func dealCards() {
         for card in game.cards {
-            _ = withAnimation(dealAnimation(for: card)) {
-                dealt.insert(card.id)
+            withAnimation(dealAnimation(for: card)) {
+                game.dealCard(card)
             }
         }
-    }
-
-    private func isDealt(_ card: EmojiMemoryGame.Card) -> Bool {
-        dealt.contains(card.id)
     }
 
     private func dealAnimation(for card: EmojiMemoryGame.Card) -> Animation {
@@ -60,7 +52,7 @@ struct EmojiMemoryGameView: View {
 
     private var cardGrid: some View {
         AspectVGrid(items: game.cards, aspectRatio: CardConstants.aspectRatio) { card in
-            if isDealt(card), card.isFaceUp || !card.isMatched {
+            if game.isDealt(card), card.isFaceUp || !card.isMatched {
                 CardView(card: card, color: game.currentThemeColor)
                     .zIndex(zIndex(for: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
@@ -79,7 +71,7 @@ struct EmojiMemoryGameView: View {
 
     private var deckBody: some View {
         ZStack {
-            ForEach(undealtCards) { card in
+            ForEach(game.undealtCards) { card in
                 CardView(card: card, color: game.currentThemeColor)
                     .zIndex(zIndex(for: card))
                     .matchedGeometryEffect(id: card.id, in: dealingNamespace)
@@ -97,7 +89,6 @@ struct EmojiMemoryGameView: View {
         HStack {
             Button {
                 withAnimation {
-                    dealt.removeAll()
                     game.resetGame()
                 }
             } label: {

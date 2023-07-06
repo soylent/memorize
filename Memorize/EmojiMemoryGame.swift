@@ -14,6 +14,7 @@ class EmojiMemoryGame: ObservableObject {
 
     /// An instance of the game model.
     @Published private var model: MemoryGame<String>!
+    @Published private var dealt = Set<Int>()
     /// An instance of the current theme.
     private var theme: Theme!
 
@@ -34,6 +35,7 @@ class EmojiMemoryGame: ObservableObject {
             self.theme = theme
         }
         model = EmojiMemoryGame.makeMemoryGame(theme ?? self.theme)
+        dealt.removeAll()
     }
 
     /// All available cards.
@@ -58,6 +60,16 @@ class EmojiMemoryGame: ObservableObject {
 
     func cardIndex(for card: Card) -> Int? {
         model.cardIndex(for: card)
+    }
+
+    var undealtCards: [EmojiMemoryGame.Card] { cards.filter { !isDealt($0) } }
+
+    func dealCard(_ card: EmojiMemoryGame.Card) {
+        dealt.insert(card.id)
+    }
+
+    func isDealt(_ card: EmojiMemoryGame.Card) -> Bool {
+        dealt.contains(card.id)
     }
 
     // MARK: - Intent(s)
