@@ -20,6 +20,7 @@ struct EmojiThemeEditor: View {
         Form {
             nameSection
             emojiSection
+            removedEmojiSection
             addEmojiSection
             cardCountSection
             colorSection
@@ -37,16 +38,28 @@ struct EmojiThemeEditor: View {
     /// A grid of the theme emojis.
     private var emojiSection: some View {
         Section(header: Text("Emojis")) {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: DrawingConstants.emojiFontSize))]) {
-                ForEach(theme.emojis, id: \.self) { emoji in
-                    Text(emoji)
-                        .font(.system(size: DrawingConstants.emojiFontSize))
-                        .onTapGesture {
-                            withAnimation {
-                                theme.removeEmoji(emoji)
-                            }
+            emojiGrid(for: theme.emojis) { emoji in theme.removeEmoji(emoji) }
+        }
+    }
+
+    /// A grid of removed emojis.
+    private var removedEmojiSection: some View {
+        Section(header: Text("Removed Emojis")) {
+            emojiGrid(for: theme.removedEmojis) { emoji in theme.addEmoji(emoji) }
+        }
+    }
+
+    /// Returns a grid built from the given `emojis` where tapping on each emoji performs `onTapAction`.
+    private func emojiGrid(for emojis: [String], onTapAction: @escaping (String) -> Void) -> some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: DrawingConstants.emojiFontSize))]) {
+            ForEach(emojis, id: \.self) { emoji in
+                Text(emoji)
+                    .font(.system(size: DrawingConstants.emojiFontSize))
+                    .onTapGesture {
+                        withAnimation {
+                            onTapAction(emoji)
                         }
-                }
+                    }
             }
         }
     }

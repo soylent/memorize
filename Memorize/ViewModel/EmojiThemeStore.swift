@@ -21,6 +21,9 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
         }
     }
 
+    /// Emojis that have ever been removed.
+    var removedEmojis: [CardContent] = []
+
     /// Colors to fill the back of each card.
     var rgbaColor: RGBAColor
 
@@ -59,15 +62,30 @@ struct MemoryGameTheme<CardContent>: Codable, Identifiable, Equatable where Card
     mutating func removeEmoji(_ emoji: CardContent) {
         if emojis.count > minNumberOfPairsOfCards {
             emojis.removeAll { $0 == emoji }
+
+            if !removedEmojis.contains(emoji) {
+                removedEmojis.append(emoji)
+            }
         }
     }
 
     /// Adds the given list of `emojis` to the theme.
     mutating func addEmojis(_ emojis: [CardContent]) {
-        for emoji in emojis where !self.emojis.contains(emoji) {
-            self.emojis.append(emoji)
+        for emoji in emojis {
+            addEmoji(emoji)
         }
     }
+
+    /// Add the given `emoji` to the theme unless it's already present.
+    mutating func addEmoji(_ emoji: CardContent) {
+        if !emojis.contains(emoji) {
+            emojis.append(emoji)
+        }
+        if removedEmojis.contains(emoji) {
+            removedEmojis.removeAll { emoji == $0 }
+        }
+    }
+
 
     /// Changes the theme color to the given `color`.
     mutating func setColor(_ color: RGBAColor) {
