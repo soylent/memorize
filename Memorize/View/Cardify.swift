@@ -2,7 +2,7 @@
 //  Cardify.swift
 //  Memorize
 //
-//  Created by user on 6/8/23.
+//  Created by soylent on 6/8/23.
 //
 
 import SwiftUI

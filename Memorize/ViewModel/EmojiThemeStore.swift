@@ -2,7 +2,7 @@
 //  EmojiThemeStore.swift
 //  Memorize
 //
-//  Created by user on 6/28/23.
+//  Created by soylent on 6/28/23.
 //
 
 import Foundation
